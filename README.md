@@ -14,4 +14,4 @@ To set up OWASP Juice Shop locally, follow the instructions on the [official Git
 
 For Docker users, simply run:
 ```sh
-docker run -d -p 3000:3000 bkimminich/juice-shop
+docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
