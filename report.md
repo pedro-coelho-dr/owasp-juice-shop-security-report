@@ -9,4 +9,7 @@
 
 some situatios....
 
-![alt text](image.png) ![alt text](image-1.png)
+![alt text](img\sqlinjection-admin-login.png) ![alt text](img\sqlinjection-admin-login2.png)
+
+
+
