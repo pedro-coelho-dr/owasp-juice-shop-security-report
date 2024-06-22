@@ -8,7 +8,7 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 
 
 
-## Mapping the Application
+## Reconnaissance
 
 ### Burp Suite -> Target -> Site map
 
@@ -18,9 +18,11 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 
 ### 1 - Directory Listing Exposure in '/ftp'
 
-By accessing the `/ftp` directory directly, files available for download can be seen. For example, the `acquisitions.md` file contains sensitive information about the company's acquisitions.
+By accessing the `/ftp` directory directly, files available for download can be seen. 
 
 ![alt text](img/mapping-ftp.png)
+
+For example, the `acquisitions.md` file contains sensitive information about the company's acquisitions.
 
 ![alt text](img/mapping-acquisitions.png)
 
@@ -37,9 +39,11 @@ By accessing the `/ftp` directory directly, files available for download can be 
 
 ### 2. Sensitive Data Exposure in Main.js
 
-Inspecting `main.js` in the developer tools debugger with Pretty Print reveals critical internal information. For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.
+Inspecting `main.js` in the developer tools debugger with Pretty Print reveals critical internal information. 
 
 ![alt text](img/mapping-mainjs.png)
+
+For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.
 
 ![alt text](img/mapping-admin-panel.png)
 
@@ -52,22 +56,23 @@ Inspecting `main.js` in the developer tools debugger with Pretty Print reveals c
 
 **Remediation**: Minimize information exposure in client-side code and use obfuscation where possible.
 
----
 
-### /rest/products/1/reviews
 
 ## SQL Injection
 
-### 3 - Admin Login Bypass
+### 3 - Brute Force SQL Injection Admin Login Bypass
 
 The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.
 
 ![alt text](img/sqlinjection-admin-login.png)
 
-![alt text](img/sqlinjection-admin-login2.png)
+Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass) of SQL Injection payloads to automate and test the vulnerability in the login form.
+
+![alt text](img/sqlinjection-admin-bruteforce.png)
 
 
-**CWE ID**: [CWE-89: SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
+**CWE ID**: 
+- [CWE-89: SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
 
 
 **Severity**: 10 (Critical) - Potential to gain administrative access to the application.
@@ -76,9 +81,10 @@ The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the 
 
 **Remediation**: Implement parameterized queries and use prepared statements.
 
----
-
 
 ## Cross Site Scripting
 
 Colocar o produto negativo para add a wallet
+
+
+### /rest/products/1/reviews
