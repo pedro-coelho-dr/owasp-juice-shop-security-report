@@ -60,7 +60,7 @@ Inspecting `main.js` in the developer tools debugger with Pretty Print reveals c
 
 ### 3 - Admin Login Bypass
 
-The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, I was able to escalate privileges, gaining administrative access to the application and enabling multiple further attacks.
+The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.
 
 ![alt text](img/sqlinjection-admin-login.png)
 
