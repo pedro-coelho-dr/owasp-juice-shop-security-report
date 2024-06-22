@@ -2,9 +2,10 @@
 
 ## Summary
 
-This report covers the security assessment of the OWASP Juice Shop, an intentionally insecure web application. The assessment includes the identification of vulnerabilities, exploitation techniques, and remediation strategies. 
+This report presents a security assessment of the OWASP Juice Shop, an intentionally insecure web application. The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
 
-Provide a high-level overview of the findings, including the most critical vulnerabilities discovered, their potential impact, and general recommendations for improving security.
+Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
+
 
 
 ## Mapping the Application
@@ -26,7 +27,9 @@ By accessing the `/ftp` directory directly, files available for download can be 
 **CWE ID**:
 - [CWE-538: File and Directory Information Exposure](https://cwe.mitre.org/data/definitions/538.html)
 
-**Impact**: High - Unauthorized access to sensitive company information.
+**Severity**: 7.5 (High) - Unauthorized access to sensitive company information.
+
+![alt text](img/mapping-ftp-score.png)
 
 **Remediation**: Implement proper access control and disable directory listing.
 
@@ -43,7 +46,9 @@ Inspecting `main.js` in the developer tools debugger with Pretty Print reveals c
 **CWE ID**:
 - [CWE-922: Insecure Storage of Sensitive Information](https://cwe.mitre.org/data/definitions/922.html)
 
-**Impact**: Medium - Exposure of internal endpoints and application logic.
+**Severity**: 5.3 (Medium) - Exposure of internal endpoints and application logic.
+
+![alt text](img/mapping-mainjs-score.png)
 
 **Remediation**: Minimize information exposure in client-side code and use obfuscation where possible.
 
@@ -65,7 +70,9 @@ The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the 
 **CWE ID**: [CWE-89: SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
 
 
-**Impact**: Critical - Potential to gain administrative access to the application.
+**Severity**: 10 (Critical) - Potential to gain administrative access to the application.
+
+![alt text](img/sqlinjection-admin-score.png)
 
 **Remediation**: Implement parameterized queries and use prepared statements.
 
