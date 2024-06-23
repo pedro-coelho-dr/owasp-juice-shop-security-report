@@ -81,6 +81,47 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 **Remediation**: Implement parameterized queries and use prepared statements.
 
+### 4 - SQL Injection in Product Search
+
+The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [SQLMap](https://sqlmap.org/), the entire database schema and data were collected. This included registered credit cards in plain text and all users' information, although passwords were encrypted.
+
+![alt text](img/sqlinjection2-endpointburp.png)
+
+![alt text](img/sqlinjection2-sqlmap.png)
+
+![alt text](img/sqlinjection2-tables.png)
+
+![alt text](img/sqlinjection2-cards.png)
+
+![alt text](img/sqlinjection2-users.png)
+
+**CWE ID**: 
+- [CWE-89: SQL Injection](https://cwe.mitre.org/data/definitions/89.html)
+
+**Severity**: 9.8 (Critical) - Full database access and data exfiltration.
+
+![alt text](img/sqlinjection2-score.png)
+
+**Remediation**: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.
+
+### 5 - Weak Password Hashing (MD5)
+
+By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool [CrackStation](https://crackstation.net/), 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.
+
+![alt text](img/weakcrypto-rainbow.png)
+
+**CWE ID**:
+- [CWE-328: Reversible One-Way Hash](https://cwe.mitre.org/data/definitions/328.html)
+
+**Severity**:  9.1 (Critical) - Unauthorized access to user and admin accounts through password decryption.
+
+![CVSS Score](img/weakcrypto-score.png)
+
+**Remediation**: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.
+
+
+## Cross Site Request Forgery
+
 
 ## Cross Site Scripting
 
