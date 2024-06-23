@@ -81,6 +81,8 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 **Remediation**: Implement parameterized queries and use prepared statements.
 
+---
+
 ### 4 - SQL Injection in Product Search
 
 The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [SQLMap](https://sqlmap.org/), the entire database schema and data were collected. This included registered credit cards in plain text and all users' information, although passwords were encrypted.
@@ -122,8 +124,37 @@ By examining the user table, it was detected that the password hashes are stored
 **Remediation**: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.
 
 
-## Cross Site Request Forgery
+## Cross-Site Request Forgery
 
+### 6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality
+
+
+
+During the assessment, it was identified that the change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
+
+
+![alt text](img/csrf-1.png)
+The request with the correct current password successfully changes the password.
+
+![alt text](img/csrf-2.png)
+The request with an incorrect current password leads to an error.
+
+![alt text](img/csrf-3.png)
+The request without the current password value successfully changes the password.
+
+
+Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.
+
+**CWE ID**:
+- [CWE-352: Cross-Site Request Forgery (CSRF)](https://cwe.mitre.org/data/definitions/352.html)
+
+**Severity**: 8.0 (High) - Unauthorized actions performed on behalf of authenticated users.
+
+![alt text](img/csrf-score.png)
+
+**Remediation**: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.
+
+---
 
 ## Cross Site Scripting
 
