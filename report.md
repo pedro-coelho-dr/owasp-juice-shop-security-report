@@ -134,12 +134,15 @@ During the assessment, it was identified that the change password functionality 
 
 
 ![alt text](img/csrf-1.png)
+
 The request with the correct current password successfully changes the password.
 
 ![alt text](img/csrf-2.png)
+
 The request with an incorrect current password leads to an error.
 
 ![alt text](img/csrf-3.png)
+
 The request without the current password value successfully changes the password.
 
 
