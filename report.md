@@ -104,6 +104,8 @@ The search field in the application is vulnerable to SQL injection. By using too
 
 **Remediation**: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.
 
+## Weak Cryptography
+
 ### 5 - Weak Password Hashing (MD5)
 
 By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool [CrackStation](https://crackstation.net/), 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.
