@@ -7,6 +7,19 @@ This report presents a security assessment of the [OWASP Juice Shop](https://owa
 Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
 
 
+## Tools
+
+### Tools
+- [Burp Suite Community Edition](https://portswigger.net/burp)
+- [Sqlmap](https://sqlmap.org/)
+- [CrackStation](https://crackstation.net/)
+- [FoxyProxy](https://getfoxyproxy.org/)
+- [Firefox](https://www.mozilla.org/)
+- [VSCode](https://code.visualstudio.com/)
+- [Docker](https://www.docker.com/)
+- [Kali Linux](https://www.kali.org/)
+- [Ubuntu](https://ubuntu.com/)
+- [Windows Subsystem for Linux](https://learn.microsoft.com/windows/wsl/)
 
 ## Reconnaissance
 
@@ -85,7 +98,7 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 ### 4 - SQL Injection in Product Search
 
-The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [sqlmap](https://sqlmap.org/), the entire database schema and data were collected. This included registered credit cards in plain text and all users' information, although passwords were encrypted.
+The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [sqlmap](https://sqlmap.org/), the entire database schema and data were collected. This included registered [credit cards](db/Cards.csv) in plain text and all [users](db/Users.csv) information, although passwords were encrypted.
 
 ![alt text](img/sqlinjection2-endpointburp.png)
 
