@@ -6,6 +6,28 @@ This report presents a security assessment of the [OWASP Juice Shop](https://owa
 
 Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
 
+## Table of Contents
+- [OWASP Juice Shop Web Application Security Report](#owasp-juice-shop-web-application-security-report)
+  - [Summary](#summary)
+  - [Table of Contents](#table-of-contents)
+  - [Tools](#tools)
+  - [Reconnaissance](#reconnaissance)
+    - [Burp Suite -\> Target -\> Site map](#burp-suite---target---site-map)
+    - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
+    - [2. Sensitive Data Exposure in Main.js](#2-sensitive-data-exposure-in-mainjs)
+  - [SQL Injection](#sql-injection)
+    - [3 - Brute Force SQL Injection Admin Login Bypass](#3---brute-force-sql-injection-admin-login-bypass)
+    - [4 - SQL Injection in Product Search](#4---sql-injection-in-product-search)
+  - [Weak Cryptography](#weak-cryptography)
+    - [5 - Weak Password Hashing (MD5)](#5---weak-password-hashing-md5)
+  - [Cross-Site Request Forgery](#cross-site-request-forgery)
+    - [6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality](#6---cross-site-request-forgery-csrf-in-change-password-functionality)
+  - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
+    - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
+      - [Payloads](#payloads)
+  - [Broken Access Control](#broken-access-control)
+    - [/rest/products/1/reviews](#restproducts1reviews)
+
 
 ## Tools
 
@@ -140,8 +162,6 @@ By examining the user table, it was detected that the password hashes are stored
 
 ### 6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality
 
-
-
 During the assessment, it was identified that the change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
 
 
@@ -171,9 +191,69 @@ Obs.: The vulnerability did not work on an updated version of Firefox due to bui
 
 ---
 
-## Cross Site Scripting
+## Cross-Site Scripting (XSS)
+
+### 7 - DOM XSS in Product Search
+
+A vulnerability was identified and exploited in the product search functionality. 
+
+#### Payloads
+
+1. **Basic Script Alert**:
+    ```html
+    <script>alert('XSS');</script>
+    ```
+    This payload did not work as the script was sanitized.
+
+2. **Image Tag with onerror Attribute**:
+    ```html
+    <img src=x onerror=alert('XSS')>
+    ```
+    This payload triggered an alert box, demonstrating the presence of an XSS vulnerability.
+
+    ![alt text](img/xss-dom-alert.png)
+
+3. **Simple Redirect Link**:
+    ```html
+    <a href="https://cesar.school/">Clique</a>
+    ```
+    This payload created a link that, when clicked, redirected the user to another page.
+
+    ![alt text](img/xss-dom-redirect.png)
+
+4. **Image Tag with onerror Redirect**:
+    ```html
+    <img src=x onerror="window.location='https://cesar.school'">
+    ```
+    This payload redirected the user to `https://cesar.school` upon triggering the onerror event.
+
+5. **Cookie Stealing**
+   ```html
+    <iframe src="javascript:alert(document.cookie)">
+    ```
+    ![alt text](img/xss-dom-cookie.png)
+
+**CWE ID**:
+- [CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')](https://cwe.mitre.org/data/definitions/79.html)
+
+**Severity**: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the context of the user's browser, leading to session hijacking, phishing, or defacement.
+
+![alt text](img/xss-dom-score.png)
+
+**Remediation**: 
+1. Implement proper input validation and output encoding.
+2. Use security libraries and frameworks that handle these issues automatically.
+
+---
+
+## Broken Access Control
+
+
+
+
+
+
+
 
 Colocar o produto negativo para add a wallet
-
-
 ### /rest/products/1/reviews
