@@ -2,6 +2,8 @@
 
 This repository contains a security report of the OWASP Juice Shop, an insecure web application. The report covers various vulnerabilities, exploitation techniques, and remediation strategies.
 
+[REPORT](report.md)
+
 OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the entire OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a practical guide for understanding and mitigating web application security issues.
 
 This report is part of the Web Application Security course in the Specialization in Cybersecurity from [Cesar School](https://cesar.school).
