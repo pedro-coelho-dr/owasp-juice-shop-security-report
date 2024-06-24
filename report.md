@@ -2,7 +2,7 @@
 
 ## Summary
 
-This report presents a security assessment of the OWASP Juice Shop, an intentionally insecure web application. The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
+This report presents a security assessment of the [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/), an intentionally insecure web application. The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
 
 Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
 
@@ -85,7 +85,7 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 ### 4 - SQL Injection in Product Search
 
-The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [SQLMap](https://sqlmap.org/), the entire database schema and data were collected. This included registered credit cards in plain text and all users' information, although passwords were encrypted.
+The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [sqlmap](https://sqlmap.org/), the entire database schema and data were collected. This included registered credit cards in plain text and all users' information, although passwords were encrypted.
 
 ![alt text](img/sqlinjection2-endpointburp.png)
 
