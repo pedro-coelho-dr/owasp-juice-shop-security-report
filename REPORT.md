@@ -9,7 +9,6 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 
 ## Tools
 
-### Tools
 - [Burp Suite Community Edition](https://portswigger.net/burp)
 - [Sqlmap](https://sqlmap.org/)
 - [CrackStation](https://crackstation.net/)
