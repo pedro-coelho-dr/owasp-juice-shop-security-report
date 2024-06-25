@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+	margin: 0;
+	display: flex;
+	justify-content: center;
+}
+
+.container {
+	max-width: 800px; /* Adjust the max-width as needed */
+	width: 100%;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+	<div class="container">
+	<script>
+		mermaid.initialize({
+		startOnLoad: true,
+		theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+			? 'dark'
+			: 'default'
+		});
+	</script>
+	<h1 id="web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</h1>
+	<ul>
+	<li><a href="#web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</a>
+	<ul>
+	<li><a href="#summary">Summary</a></li>
+	<li><a href="#tools">Tools</a></li>
+	<li><a href="#1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</a></li>
+	<li><a href="#2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</a></li>
+	<li><a href="#3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</a></li>
+	<li><a href="#4---sql-injection-in-product-search">4 - SQL Injection in Product Search</a></li>
+	<li><a href="#5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</a></li>
+	<li><a href="#6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</a></li>
+	<li><a href="#7---dom-xss-in-product-search">7 - DOM XSS in Product Search</a></li>
+	<li><a href="#8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</a></li>
+	<li><a href="#9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</a></li>
+	</ul>
+	</li>
+	</ul>
+	<h2 id="summary">Summary</h2>
+	<p>OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the entire OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a practical guide for understanding and mitigating web application security issues.</p>
+	<p>This report is part of the Web Application Security course in the Specialization in Cybersecurity from <a href="https://cesar.school">Cesar School</a>.</p>
+	<p>For more information on OWASP Juice Shop, visit the <a href="https://owasp.org/www-project-juice-shop/">official OWASP Juice Shop page</a>.</p>
+	<p><strong>Installation</strong></p>
+	<p>To set up OWASP Juice Shop locally, follow the instructions on the <a href="https://github.com/juice-shop/juice-shop">official GitHub repository</a>.</p>
+	<p>For Docker users, simply run:</p>
+	<pre class="hljs"><code><div>docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+	</div></code></pre>
+	<p><strong>Assessment</strong></p>
+	<p>The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.</p>
+	<p>Each vulnerability is mapped to its corresponding <a href="https://cwe.mitre.org/">CWE (Common Weakness Enumeration)</a> and evaluated using the <a href="https://www.first.org/cvss/">Common Vulnerability Scoring System (CVSS)</a> calculator.</p>
+	<h2 id="tools">Tools</h2>
+	<ul>
+	<li><a href="https://portswigger.net/burp">Burp Suite Community Edition</a></li>
+	<li><a href="https://sqlmap.org/">Sqlmap</a></li>
+	<li><a href="https://crackstation.net/">CrackStation</a></li>
+	<li><a href="https://getfoxyproxy.org/">FoxyProxy</a></li>
+	<li><a href="https://www.mozilla.org/">Firefox</a></li>
+	<li><a href="https://www.docker.com/">Docker</a></li>
+	<li><a href="https://www.kali.org/">Kali Linux</a></li>
+	<li><a href="https://ubuntu.com/">Ubuntu</a></li>
+	<li><a href="https://learn.microsoft.com/windows/wsl/">Windows Subsystem for Linux</a></li>
+	</ul>
+	<h2 id="1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</h2>
+	<p><img src="img/mapping-burp.png" alt="alt text"></p>
+	<p>Burp Suite -&gt; Target -&gt; Site map</p>
+	<p>By accessing the <code>/ftp</code> directory directly, files available for download can be seen.</p>
+	<p><img src="img/mapping-ftp.png" alt="alt text"></p>
+	<p>For example, the <code>acquisitions.md</code> file contains sensitive information about the company's acquisitions.</p>
+	<p><img src="img/mapping-acquisitions.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/538.html">CWE-538: File and Directory Information Exposure</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 7.5 (High) - Unauthorized access to sensitive company information.</p>
+	<p><img src="img/mapping-ftp-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>: Implement proper access control and disable directory listing.</p>
+	<h2 id="2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</h2>
+	<p>Inspecting <code>main.js</code> in the developer tools debugger with Pretty Print reveals critical internal information.</p>
+	<p><img src="img/mapping-mainjs.png" alt="alt text"></p>
+	<p>For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.</p>
+	<p><img src="img/mapping-admin-panel.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/922.html">CWE-922: Insecure Storage of Sensitive Information</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 5.3 (Medium) - Exposure of internal endpoints and application logic.</p>
+	<p><img src="img/mapping-mainjs-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>: Minimize information exposure in client-side code and use obfuscation where possible.</p>
+	<h2 id="3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</h2>
+	<p>The login form is vulnerable to SQL injection. By entering <code>' OR 1=1 --</code> in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.</p>
+	<p><img src="img/sqlinjection-admin-login.png" alt="alt text"></p>
+	<p>Using Burp Suite Intruder tool configured with a <a href="https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass">list</a> of SQL Injection payloads to automate and test the vulnerability in the login form.</p>
+	<p><img src="img/sqlinjection-admin-bruteforce.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 10 (Critical) - Potential to gain administrative access to the application.</p>
+	<p><img src="img/sqlinjection-admin-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>: Implement parameterized queries and use prepared statements.</p>
+	<h2 id="4---sql-injection-in-product-search">4 - SQL Injection in Product Search</h2>
+	<p>The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and <a href="https://sqlmap.org/">sqlmap</a>, the entire database schema and data were collected. This included registered <a href="db/Cards.csv">credit cards</a> in plain text and all <a href="db/Users.csv">users</a> information, although passwords were encrypted.</p>
+	<p><img src="img/sqlinjection2-endpointburp.png" alt="alt text"></p>
+	<p><img src="img/sqlinjection2-sqlmap.png" alt="alt text"></p>
+	<p><img src="img/sqlinjection2-tables.png" alt="alt text"></p>
+	<p><img src="img/sqlinjection2-cards.png" alt="alt text"></p>
+	<p><img src="img/sqlinjection2-users.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 9.8 (Critical) - Full database access and data exfiltration.</p>
+	<p><img src="img/sqlinjection2-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.</p>
+	<h2 id="5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</h2>
+	<p>By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool <a href="https://crackstation.net/">CrackStation</a>, 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.</p>
+	<p><img src="img/weakcrypto-rainbow.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Reversible One-Way Hash</a></li>
+	</ul>
+	<p><strong>Severity</strong>:  9.1 (Critical) - Unauthorized access to user and admin accounts through password decryption.</p>
+	<p><img src="img/weakcrypto-score.png" alt="CVSS Score"></p>
+	<p><strong>Remediation</strong>: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.</p>
+	<h2 id="6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</h2>
+	<p>The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.</p>
+	<p>The request with the correct current password successfully changes the password:</p>
+	<p><img src="img/csrf-1.png" alt="alt text"></p>
+	<p>The request with an incorrect current password leads to an error:❌</p>
+	<p><img src="img/csrf-2.png" alt="alt text"></p>
+	<p>The request without the current password value successfully changes the password: ✅</p>
+	<p><img src="img/csrf-3.png" alt="alt text"></p>
+	<p>Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.</p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 8.0 (High) - Unauthorized actions performed on behalf of authenticated users.</p>
+	<p><img src="img/csrf-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.</p>
+	<h2 id="7---dom-xss-in-product-search">7 - DOM XSS in Product Search</h2>
+	<p>The product search functionality is vulnerable to DOM-based XSS. DOM-based XSS occurs when the attack payload is executed as part of the Document Object Model (DOM) on the client side, without any interaction with the server.</p>
+	<p>By entering the payload in the browser´s search bar, the application executes the script in the context of the user's browser.</p>
+	<p><strong>Payloads:</strong></p>
+	<ol>
+	<li>
+	<p><strong>Basic Script Alert</strong> ❌</p>
+	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">alert(<span class="hljs-string">'XSS'</span>);</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+	</div></code></pre>
+	<p>This payload did not work as the script was sanitized.</p>
+	</li>
+	<li>
+	<p><strong>Image Tag with onerror Attribute</strong> ✅</p>
+	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>'<span class="hljs-attr">XSS</span>')&gt;</span>
+	</div></code></pre>
+	<p>This payload triggered an alert box, demonstrating the presence of an XSS vulnerability.</p>
+	<p><img src="img/xss-dom-alert.png" alt="alt text"></p>
+	</li>
+	<li>
+	<p><strong>Simple Redirect Link</strong> ✅</p>
+	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://cesar.school/"</span>&gt;</span>Clique<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+	</div></code></pre>
+	<p>This payload created a link that, when clicked, redirected the user to another page.</p>
+	<p><img src="img/xss-dom-redirect.png" alt="alt text"></p>
+	</li>
+	<li>
+	<p><strong>Image Tag with onerror Redirect</strong> ✅</p>
+	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">"window.location='https://cesar.school'"</span>&gt;</span>
+	</div></code></pre>
+	<p>This payload straight redirected the user upon triggering the onerror event.</p>
+	</li>
+	<li>
+	<p><strong>Cookie Stealing</strong> ✅</p>
+	<pre class="hljs"><code><div> <span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"javascript:alert(document.cookie)"</span>&gt;</span>
+	</div></code></pre>
+	<p><img src="img/xss-dom-cookie.png" alt="alt text">
+	This payload triggered an alert showing the user's cookies.</p>
+	</li>
+	</ol>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the user's browser.</p>
+	<p><img src="img/xss-dom-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>:</p>
+	<ol>
+	<li>Implement proper input validation and output encoding.</li>
+	<li>Use security libraries and frameworks that handle these issues automatically.</li>
+	</ol>
+	<h2 id="8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</h2>
+	<p>The basket functionality has broken access control vulnerabilities, allowing unauthorized actions on behalf of other users.</p>
+	<p><strong>View other users baskets</strong></p>
+	<p>By manipulating the request to view a basket, it was possible to access other users baskets. Using Burp Suite's Repeater tool, the HTTP header was modified to <code>/rest/basket/*</code>, with <code>*</code> being the user ID. This allowed viewing the contents of other users' baskets.</p>
+	<ul>
+	<li>
+	<p>Original request:</p>
+	<p><img src="img/broken-request-original.png" alt="alt text"></p>
+	</li>
+	<li>
+	<p>Altered request:</p>
+	<p><img src="img/broken-request-altered.png" alt="alt text"></p>
+	</li>
+	<li>
+	<p>Reponse</p>
+	<p>The response shows the basket of the user with ID 2:</p>
+	<p><img src="img/broken-response.png" alt="alt text"></p>
+	</li>
+	</ul>
+	<p>Jim's basket was accessed, revealing his items and personal information.</p>
+	<p><img src="img/broken-site.png" alt="alt text"></p>
+	<p><strong>Add items to other users baskets</strong></p>
+	<p>It was possible to add items to other users baskets by manipulating the request to add an item. This involved intercepting the request and altering the BasketId parameter.</p>
+	<ul>
+	<li>
+	<p>Original request:</p>
+	<p>User <code>admin</code> -&gt; BasketId <code>1</code></p>
+	<p>Product <code>Eggfruit Juice</code> -&gt; ProductId <code>3</code></p>
+	<p><img src="img/broken-add-request-original.png" alt="alt text"></p>
+	</li>
+	</ul>
+	<p>Trying to simply change the <code>BasketId</code> to <code>2</code> didn´t work, but adding a duplicated <code>BasketId</code> parameter with the value <code>2</code> worked.</p>
+	<ul>
+	<li>
+	<p>Altered request:</p>
+	<p>User <code>Jim</code> -&gt; BasketId <code>2</code>
+	Quantity -&gt; <code>10</code></p>
+	<p><img src="img/broken-add-request-altered.png" alt="alt text"></p>
+	</li>
+	<li>
+	<p>Successful Response:</p>
+	<p><img src="img/broken-add-response.png" alt="alt text"></p>
+	</li>
+	</ul>
+	<p>Attempting to add more items to the basket on basket page using a <code>PUT</code> request or using Burp Suite's Repeater tool was unsuccessful. The vulnerability could only be exploited through the &quot;Add to Basket&quot; functionality on the main page by intercepting and modifying the request.</p>
+	<p><img src="img/broken-add-site.png" alt="alt text"></p>
+	<p><strong>CWE ID</strong>:</p>
+	<ul>
+	<li><a href="https://cwe.mitre.org/data/definitions/284.html">CWE-284: Improper Access Control</a></li>
+	</ul>
+	<p><strong>Severity</strong>: 8.1 (High) - Unauthorized actions performed on behalf of other users, including viewing and modifying basket contents.</p>
+	<p><img src="img/broken-add-score.png" alt="alt text"></p>
+	<p><strong>Remediation</strong>:
+	Implement proper access control checks on both server-side and client-side.
+	Validate user permissions for each action to ensure users can only access and modify their own resources.</p>
+	<h2 id="9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</h2>
+	</div>
+</body>
+</html>
