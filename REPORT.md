@@ -1,33 +1,27 @@
 # OWASP Juice Shop Web Application Security Report
 
+## Table of Contents
+- [OWASP Juice Shop Web Application Security Report](#owasp-juice-shop-web-application-security-report)
+  - [Table of Contents](#table-of-contents)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
+  - [2 - Sensitive Data Exposure in Main.js](#2---sensitive-data-exposure-in-mainjs)
+  - [3 - Brute Force SQL Injection Admin Login Bypass](#3---brute-force-sql-injection-admin-login-bypass)
+  - [4 - SQL Injection in Product Search](#4---sql-injection-in-product-search)
+  - [5 - Weak Password Hashing (MD5)](#5---weak-password-hashing-md5)
+  - [6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality](#6---cross-site-request-forgery-csrf-in-change-password-functionality)
+  - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
+  - [8 - Broken Access Control](#8---broken-access-control)
+    - [/rest/products/1/reviews](#restproducts1reviews)
+
 ## Summary
 
 This report presents a security assessment of the [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/), an intentionally insecure web application. The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
 
 Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
 
-## Table of Contents
-- [OWASP Juice Shop Web Application Security Report](#owasp-juice-shop-web-application-security-report)
-  - [Summary](#summary)
-  - [Table of Contents](#table-of-contents)
-  - [Tools](#tools)
-  - [Reconnaissance](#reconnaissance)
-    - [Burp Suite -\> Target -\> Site map](#burp-suite---target---site-map)
-    - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
-    - [2. Sensitive Data Exposure in Main.js](#2-sensitive-data-exposure-in-mainjs)
-  - [SQL Injection](#sql-injection)
-    - [3 - Brute Force SQL Injection Admin Login Bypass](#3---brute-force-sql-injection-admin-login-bypass)
-    - [4 - SQL Injection in Product Search](#4---sql-injection-in-product-search)
-  - [Weak Cryptography](#weak-cryptography)
-    - [5 - Weak Password Hashing (MD5)](#5---weak-password-hashing-md5)
-  - [Cross-Site Request Forgery](#cross-site-request-forgery)
-    - [6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality](#6---cross-site-request-forgery-csrf-in-change-password-functionality)
-  - [Cross-Site Scripting (XSS)](#cross-site-scripting-xss)
-    - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
-      - [Payloads](#payloads)
-  - [Broken Access Control](#broken-access-control)
-    - [/rest/products/1/reviews](#restproducts1reviews)
-
+  
 
 ## Tools
 
@@ -42,15 +36,10 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 - [Ubuntu](https://ubuntu.com/)
 - [Windows Subsystem for Linux](https://learn.microsoft.com/windows/wsl/)
 
-## Reconnaissance
-
-### Burp Suite -> Target -> Site map
+## 1 - Directory Listing Exposure in '/ftp'
 
 ![alt text](img/mapping-burp.png)
-
----
-
-### 1 - Directory Listing Exposure in '/ftp'
+Burp Suite -> Target -> Site map
 
 By accessing the `/ftp` directory directly, files available for download can be seen. 
 
@@ -71,7 +60,7 @@ For example, the `acquisitions.md` file contains sensitive information about the
 
 ---
 
-### 2. Sensitive Data Exposure in Main.js
+## 2 - Sensitive Data Exposure in Main.js
 
 Inspecting `main.js` in the developer tools debugger with Pretty Print reveals critical internal information. 
 
@@ -90,11 +79,7 @@ For instance, searching for 'admin' exposes the administration panel, which may 
 
 **Remediation**: Minimize information exposure in client-side code and use obfuscation where possible.
 
-
-
-## SQL Injection
-
-### 3 - Brute Force SQL Injection Admin Login Bypass
+## 3 - Brute Force SQL Injection Admin Login Bypass
 
 The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.
 
@@ -117,7 +102,7 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 ---
 
-### 4 - SQL Injection in Product Search
+## 4 - SQL Injection in Product Search
 
 The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and [sqlmap](https://sqlmap.org/), the entire database schema and data were collected. This included registered [credit cards](db/Cards.csv) in plain text and all [users](db/Users.csv) information, although passwords were encrypted.
 
@@ -140,9 +125,7 @@ The search field in the application is vulnerable to SQL injection. By using too
 
 **Remediation**: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.
 
-## Weak Cryptography
-
-### 5 - Weak Password Hashing (MD5)
+## 5 - Weak Password Hashing (MD5)
 
 By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool [CrackStation](https://crackstation.net/), 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.
 
@@ -157,10 +140,7 @@ By examining the user table, it was detected that the password hashes are stored
 
 **Remediation**: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.
 
-
-## Cross-Site Request Forgery
-
-### 6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality
+## 6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality
 
 During the assessment, it was identified that the change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
 
@@ -189,15 +169,11 @@ Obs.: The vulnerability did not work on an updated version of Firefox due to bui
 
 **Remediation**: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.
 
----
-
-## Cross-Site Scripting (XSS)
-
-### 7 - DOM XSS in Product Search
+## 7 - DOM XSS in Product Search
 
 A vulnerability was identified and exploited in the product search functionality. 
 
-#### Payloads
+**Payloads:**
 
 1. **Basic Script Alert**:
     ```html
@@ -244,9 +220,7 @@ A vulnerability was identified and exploited in the product search functionality
 1. Implement proper input validation and output encoding.
 2. Use security libraries and frameworks that handle these issues automatically.
 
----
-
-## Broken Access Control
+## 8 - Broken Access Control
 
 
 
