@@ -12,8 +12,8 @@
   - [5 - Weak Password Hashing (MD5)](#5---weak-password-hashing-md5)
   - [6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality](#6---cross-site-request-forgery-csrf-in-change-password-functionality)
   - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
-  - [8 - Broken Access Control](#8---broken-access-control)
-    - [/rest/products/1/reviews](#restproducts1reviews)
+  - [8 - Broken Access Control in Basket Functionality](#8---broken-access-control-in-basket-functionality)
+  - [9 - Improper Input Validation in Basket Functionality](#9---improper-input-validation-in-basket-functionality)
 
 ## Summary
 
@@ -141,18 +141,18 @@ By examining the user table, it was detected that the password hashes are stored
 
 ## 6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality
 
-During the assessment, it was identified that the change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
+The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
 
 The request with the correct current password successfully changes the password:
 
 ![alt text](img/csrf-1.png)
 
 
-The request with an incorrect current password leads to an error:
+The request with an incorrect current password leads to an error:❌
 
 ![alt text](img/csrf-2.png)
 
-The request without the current password value successfully changes the password:
+The request without the current password value successfully changes the password: ✅
 
 ![alt text](img/csrf-3.png)
 
@@ -222,14 +222,77 @@ By entering the payload in the browser´s search bar, the application executes t
 1. Implement proper input validation and output encoding.
 2. Use security libraries and frameworks that handle these issues automatically.
 
-## 8 - Broken Access Control
+## 8 - Broken Access Control in Basket Functionality
+
+The basket functionality has broken access control vulnerabilities, allowing unauthorized actions on behalf of other users.
+
+**View other users baskets**
+
+By manipulating the request to view a basket, it was possible to access other users baskets. Using Burp Suite's Repeater tool, the HTTP header was modified to `/rest/basket/*`, with `*` being the user ID. This allowed viewing the contents of other users' baskets.
+
+- Original request:
+
+    ![alt text](img/broken-request-original.png)
+
+- Altered request:
+
+    ![alt text](img/broken-request-altered.png)
+
+- Reponse
+  
+  The response shows the basket of the user with ID 2:
+
+    ![alt text](img/broken-response.png)
+
+Jim's basket was accessed, revealing his items and personal information.
+
+![alt text](img/broken-site.png)
+
+
+**Add items to other users baskets**
+
+It was possible to add items to other users baskets by manipulating the request to add an item. This involved intercepting the request and altering the BasketId parameter.
+
+- Original request:
+
+    User `admin` -> BasketId `1`
+
+    Product `Eggfruit Juice` -> ProductId `3`
+
+    ![alt text](img/broken-add-request-original.png)
+    
+Trying to simply change the `BasketId` to `2` didn´t work, but adding a duplicated `BasketId` parameter with the value `2` worked.
+
+- Altered request:
+  
+    User `Jim` -> BasketId `2`
+    Quantity -> `10`
+
+    ![alt text](img/broken-add-request-altered.png)
+
+- Successful Response:
+  
+    ![alt text](img/broken-add-response.png)
+   
+
+Attempting to add more items to the basket on basket page using a `PUT` request or using Burp Suite's Repeater tool was unsuccessful. The vulnerability could only be exploited through the "Add to Basket" functionality on the main page by intercepting and modifying the request.
+
+![alt text](img/broken-add-site.png)
+
+
+**CWE ID**:
+- [CWE-284: Improper Access Control](https://cwe.mitre.org/data/definitions/284.html)
+
+**Severity**: 8.1 (High) - Unauthorized actions performed on behalf of other users, including viewing and modifying basket contents.
+
+![alt text](img/broken-add-score.png)
+
+**Remediation**: 
+Implement proper access control checks on both server-side and client-side.
+Validate user permissions for each action to ensure users can only access and modify their own resources.
+
+## 9 - Improper Input Validation in Basket Functionality
 
 
 
 
-
-
-
-
-Colocar o produto negativo para add a wallet
-### /rest/products/1/reviews
