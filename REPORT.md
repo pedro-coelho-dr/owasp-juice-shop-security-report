@@ -7,7 +7,7 @@
   - [Tools](#tools)
   - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
   - [2 - Sensitive Data Exposure in Main.js](#2---sensitive-data-exposure-in-mainjs)
-  - [3 - Brute Force SQL Injection Admin Login Bypass](#3---brute-force-sql-injection-admin-login-bypass)
+  - [3 - SQL Injection Brute Force in User Login](#3---sql-injection-brute-force-in-user-login)
   - [4 - SQL Injection in Product Search](#4---sql-injection-in-product-search)
   - [5 - Weak Password Hashing (MD5)](#5---weak-password-hashing-md5)
   - [6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality](#6---cross-site-request-forgery-csrf-in-change-password-functionality)
@@ -39,6 +39,7 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 ## 1 - Directory Listing Exposure in '/ftp'
 
 ![alt text](img/mapping-burp.png)
+
 Burp Suite -> Target -> Site map
 
 By accessing the `/ftp` directory directly, files available for download can be seen. 
@@ -58,7 +59,6 @@ For example, the `acquisitions.md` file contains sensitive information about the
 
 **Remediation**: Implement proper access control and disable directory listing.
 
----
 
 ## 2 - Sensitive Data Exposure in Main.js
 
@@ -79,7 +79,7 @@ For instance, searching for 'admin' exposes the administration panel, which may 
 
 **Remediation**: Minimize information exposure in client-side code and use obfuscation where possible.
 
-## 3 - Brute Force SQL Injection Admin Login Bypass
+## 3 - SQL Injection Brute Force in User Login
 
 The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.
 
@@ -100,7 +100,6 @@ Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.
 
 **Remediation**: Implement parameterized queries and use prepared statements.
 
----
 
 ## 4 - SQL Injection in Product Search
 
@@ -144,18 +143,18 @@ By examining the user table, it was detected that the password hashes are stored
 
 During the assessment, it was identified that the change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
 
+The request with the correct current password successfully changes the password:
 
 ![alt text](img/csrf-1.png)
 
-The request with the correct current password successfully changes the password.
+
+The request with an incorrect current password leads to an error:
 
 ![alt text](img/csrf-2.png)
 
-The request with an incorrect current password leads to an error.
+The request without the current password value successfully changes the password:
 
 ![alt text](img/csrf-3.png)
-
-The request without the current password value successfully changes the password.
 
 
 Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.
@@ -171,17 +170,19 @@ Obs.: The vulnerability did not work on an updated version of Firefox due to bui
 
 ## 7 - DOM XSS in Product Search
 
-A vulnerability was identified and exploited in the product search functionality. 
+The product search functionality is vulnerable to DOM-based XSS. DOM-based XSS occurs when the attack payload is executed as part of the Document Object Model (DOM) on the client side, without any interaction with the server. 
+
+By entering the payload in the browser´s search bar, the application executes the script in the context of the user's browser.
 
 **Payloads:**
 
-1. **Basic Script Alert**:
+1. **Basic Script Alert** ❌
     ```html
     <script>alert('XSS');</script>
     ```
     This payload did not work as the script was sanitized.
 
-2. **Image Tag with onerror Attribute**:
+2. **Image Tag with onerror Attribute** ✅
     ```html
     <img src=x onerror=alert('XSS')>
     ```
@@ -189,7 +190,7 @@ A vulnerability was identified and exploited in the product search functionality
 
     ![alt text](img/xss-dom-alert.png)
 
-3. **Simple Redirect Link**:
+3. **Simple Redirect Link** ✅
     ```html
     <a href="https://cesar.school/">Clique</a>
     ```
@@ -197,22 +198,23 @@ A vulnerability was identified and exploited in the product search functionality
 
     ![alt text](img/xss-dom-redirect.png)
 
-4. **Image Tag with onerror Redirect**:
+4. **Image Tag with onerror Redirect** ✅
     ```html
     <img src=x onerror="window.location='https://cesar.school'">
     ```
-    This payload redirected the user to `https://cesar.school` upon triggering the onerror event.
+    This payload straight redirected the user upon triggering the onerror event.
 
-5. **Cookie Stealing**
+5. **Cookie Stealing** ✅
    ```html
     <iframe src="javascript:alert(document.cookie)">
     ```
     ![alt text](img/xss-dom-cookie.png)
+    This payload triggered an alert showing the user's cookies.
 
 **CWE ID**:
 - [CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')](https://cwe.mitre.org/data/definitions/79.html)
 
-**Severity**: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the context of the user's browser, leading to session hijacking, phishing, or defacement.
+**Severity**: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the user's browser.
 
 ![alt text](img/xss-dom-score.png)
 
