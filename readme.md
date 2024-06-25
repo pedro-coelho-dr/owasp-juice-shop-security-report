@@ -1,8 +1,10 @@
 # Web Application Security Report: OWASP Juice Shop
 
-**[HTML Preview](https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/a1ca2245606b34b643a66882b92c3b3eb210dd36/report.html)**
+<< **[HTML Preview](https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/a1ca2245606b34b643a66882b92c3b3eb210dd36/report.html)** >>
 
+### Contents
 - [Web Application Security Report: OWASP Juice Shop](#web-application-security-report-owasp-juice-shop)
+    - [Contents](#contents)
   - [Summary](#summary)
   - [Tools](#tools)
   - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
@@ -14,13 +16,14 @@
   - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
   - [8 - Broken Access Control in Basket Functionality](#8---broken-access-control-in-basket-functionality)
   - [9 - Improper Input Validation in Basket Functionality](#9---improper-input-validation-in-basket-functionality)
+  - [Last one](#last-one)
 
 
 ## Summary
 
-OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the entire OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a practical guide for understanding and mitigating web application security issues.
+OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a learning guide for understanding and mitigating web application security issues.
 
-This report is part of the Web Application Security course in the Specialization in Cybersecurity from [Cesar School](https://cesar.school).
+This report is part of the `Web Application Security` course in the `Cybersecurity Specialization` in [Cesar School](https://cesar.school).
 
 For more information on OWASP Juice Shop, visit the [official OWASP Juice Shop page](https://owasp.org/www-project-juice-shop/).
 
@@ -35,7 +38,7 @@ docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
 
 **Assessment**
 
-The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
+This assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.
 
 Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumeration)](https://cwe.mitre.org/) and evaluated using the [Common Vulnerability Scoring System (CVSS)](https://www.first.org/cvss/) calculator.
 
@@ -54,17 +57,17 @@ Each vulnerability is mapped to its corresponding [CWE (Common Weakness Enumerat
 
 ## 1 - Directory Listing Exposure in '/ftp'
 
+Burp Suite was used to map the application's endpoints. By navigating through the site map, the `/ftp` directory was discovered, which allows directory listing. This exposes sensitive information about the application's internal structure and files
+
 ![alt text](img/mapping-burp.png)
 
-Burp Suite -> Target -> Site map
+- By accessing the `/ftp` directory directly, files available for download can be seen. 
 
-By accessing the `/ftp` directory directly, files available for download can be seen. 
+    ![alt text](img/mapping-ftp.png)
 
-![alt text](img/mapping-ftp.png)
+- For example, the `acquisitions.md` file contains sensitive information about the company's acquisitions.
 
-For example, the `acquisitions.md` file contains sensitive information about the company's acquisitions.
-
-![alt text](img/mapping-acquisitions.png)
+    ![alt text](img/mapping-acquisitions.png)
 
 **CWE ID**:
 - [CWE-538: File and Directory Information Exposure](https://cwe.mitre.org/data/definitions/538.html)
@@ -82,9 +85,9 @@ Inspecting `main.js` in the developer tools debugger with Pretty Print reveals c
 
 ![alt text](img/mapping-mainjs.png)
 
-For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.
+- For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.
 
-![alt text](img/mapping-admin-panel.png)
+    ![alt text](img/mapping-admin-panel.png)
 
 **CWE ID**:
 - [CWE-922: Insecure Storage of Sensitive Information](https://cwe.mitre.org/data/definitions/922.html)
@@ -101,9 +104,9 @@ The login form is vulnerable to SQL injection. By entering `' OR 1=1 --` in the 
 
 ![alt text](img/sqlinjection-admin-login.png)
 
-Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass) of SQL Injection payloads to automate and test the vulnerability in the login form.
+- Using Burp Suite Intruder tool configured with a [list](https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass) of SQL Injection payloads to automate and test the vulnerability in the login form.
 
-![alt text](img/sqlinjection-admin-bruteforce.png)
+    ![alt text](img/sqlinjection-admin-bruteforce.png)
 
 
 **CWE ID**: 
@@ -159,18 +162,18 @@ By examining the user table, it was detected that the password hashes are stored
 
 The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.
 
-The request with the correct current password successfully changes the password:
+- The request with the correct current password successfully changes the password:
 
-![alt text](img/csrf-1.png)
+    ![alt text](img/csrf-1.png)
 
 
-The request with an incorrect current password leads to an error:❌
+- The request with an incorrect current password leads to an error:❌
 
-![alt text](img/csrf-2.png)
+    ![alt text](img/csrf-2.png)
 
-The request without the current password value successfully changes the password: ✅
+- The request without the current password value successfully changes the password: ✅
 
-![alt text](img/csrf-3.png)
+    ![alt text](img/csrf-3.png)
 
 
 Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.
@@ -224,8 +227,9 @@ By entering the payload in the browser´s search bar, the application executes t
    ```html
     <iframe src="javascript:alert(document.cookie)">
     ```
-    ![alt text](img/xss-dom-cookie.png)
     This payload triggered an alert showing the user's cookies.
+
+    ![alt text](img/xss-dom-cookie.png)
 
 **CWE ID**:
 - [CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')](https://cwe.mitre.org/data/definitions/79.html)
@@ -235,8 +239,8 @@ By entering the payload in the browser´s search bar, the application executes t
 ![alt text](img/xss-dom-score.png)
 
 **Remediation**: 
-1. Implement proper input validation and output encoding.
-2. Use security libraries and frameworks that handle these issues automatically.
+Implement proper input validation and output encoding.
+Use security libraries and frameworks that handle these issues automatically.
 
 ## 8 - Broken Access Control in Basket Functionality
 
@@ -271,9 +275,13 @@ It was possible to add items to other users baskets by manipulating the request 
 
 - Original request:
 
-    User `admin` -> BasketId `1`
+    User `admin`
+    
+    BasketId `1`
 
-    Product `Eggfruit Juice` -> ProductId `3`
+    Product `Eggfruit Juice`
+    
+    ProductId `3`
 
     ![alt text](img/broken-add-request-original.png)
     
@@ -281,8 +289,11 @@ Trying to simply change the `BasketId` to `2` didn´t work, but adding a duplica
 
 - Altered request:
   
-    User `Jim` -> BasketId `2`
-    Quantity -> `10`
+    User `Jim`
+
+    BasketId `2`
+
+    Quantity `10`
 
     ![alt text](img/broken-add-request-altered.png)
 
@@ -291,7 +302,7 @@ Trying to simply change the `BasketId` to `2` didn´t work, but adding a duplica
     ![alt text](img/broken-add-response.png)
    
 
-Attempting to add more items to the basket on basket page using a `PUT` request or using Burp Suite's Repeater tool was unsuccessful. The vulnerability could only be exploited through the "Add to Basket" functionality on the main page by intercepting and modifying the request.
+Attempting to add more items to the basket on basket page using a `PUT` request or using Burp Suite's Repeater tool were unsuccessful. The vulnerability could only be exploited through the "Add to Basket" functionality on the main page by intercepting and modifying the request.
 
 ![alt text](img/broken-add-site.png)
 
@@ -309,6 +320,40 @@ Validate user permissions for each action to ensure users can only access and mo
 
 ## 9 - Improper Input Validation in Basket Functionality
 
+The basket functionality is vulnerable to improper input validation. By entering a negative quantity in the basket the application allows the user to proceed with the purchase, resulting in a negative total price.
+
+- Original request:
+
+    ![alt text](img/input-request-original.png)
 
 
+- Altered request:
 
+    Quantity `-10`
+
+    ![alt text](img/input-request-altered.png)
+
+- Successful Response:
+
+    ![alt text](img/input-response.png)
+
+The application allowed the purchase of a negative quantity of items, resulting in a negative total price.
+![alt text](img/input-basket.png)
+
+By checking out with a negative quantity using de digital wallet functionality, the user receives money instead of paying for the items.
+![alt text](img/input-order.png)
+
+![alt text](img/input-wallet.png)
+
+**CWE ID**:
+- [CWE-20: Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)
+
+**Severity**: 6.5 (Medium) - Financial loss due to negative transactions allowed.
+
+![alt text](img/input-score.png)
+
+**Remediation**:
+Implement proper input validation to ensure only positive quantities are allowed.
+Perform server-side checks to validate the quantity before processing transactions.
+
+## Last one
