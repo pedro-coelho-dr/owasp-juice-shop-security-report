@@ -1,8 +1,5 @@
 # Web Application Security Report: OWASP Juice Shop
-
-## Table of Contents
 - [Web Application Security Report: OWASP Juice Shop](#web-application-security-report-owasp-juice-shop)
-  - [Table of Contents](#table-of-contents)
   - [Summary](#summary)
   - [Tools](#tools)
   - [1 - Directory Listing Exposure in '/ftp'](#1---directory-listing-exposure-in-ftp)
