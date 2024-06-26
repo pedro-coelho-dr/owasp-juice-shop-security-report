@@ -21,7 +21,7 @@
 
 ## Summary
 
-OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a learning guide for understanding and mitigating web application security issues.
+OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the OWASP Top Ten and other security flaws found in real-world applications. This project serves as a learning guide for understanding and mitigating web application security issues.
 
 This report is part of the `Web Application Security` course in the `Cybersecurity Specialization` in [Cesar School](https://cesar.school).
 
@@ -381,15 +381,15 @@ The file upload functionality in the complaint page is vulnerable to improper in
 - Intercept the upload request using Burp Suite.
 - Modify the file extension back to `payload-script.sh` and insert additional data to bypass the 100 KB constraint.
 
-  Original Request:
-        
-    ![alt text](img/file-upload-request-original.png)
-        
-  Altered Request:
-        
-    ![alt text](img/file-upload-request-altered.png)
+Original Request:
 
-The upload is successfully processed, allowing the malicious file to be uploaded despite the front-end restrictions.
+![alt text](img/file-upload-request-original.png)
+
+Altered Request:
+        
+![alt text](img/file-upload-request-altered.png)
+
+The upload is successfully processed, allowing the malicious file to be uploaded.
 
 **CWE ID**:
 - [CWE-20: Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)

@@ -365,241 +365,340 @@ code {
 <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-	<div class="container">
-	<script>
-		mermaid.initialize({
-		startOnLoad: true,
-		theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-			? 'dark'
-			: 'default'
-		});
-	</script>
-	<h1 id="web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</h1>
-	<ul>
-	<li><a href="#web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</a>
-	<ul>
-	<li><a href="#summary">Summary</a></li>
-	<li><a href="#tools">Tools</a></li>
-	<li><a href="#1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</a></li>
-	<li><a href="#2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</a></li>
-	<li><a href="#3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</a></li>
-	<li><a href="#4---sql-injection-in-product-search">4 - SQL Injection in Product Search</a></li>
-	<li><a href="#5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</a></li>
-	<li><a href="#6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</a></li>
-	<li><a href="#7---dom-xss-in-product-search">7 - DOM XSS in Product Search</a></li>
-	<li><a href="#8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</a></li>
-	<li><a href="#9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</a></li>
-	</ul>
-	</li>
-	</ul>
-	<h2 id="summary">Summary</h2>
-	<p>OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the entire OWASP Top Ten and many other security flaws found in real-world applications. This project serves as a practical guide for understanding and mitigating web application security issues.</p>
-	<p>This report is part of the Web Application Security course in the Specialization in Cybersecurity from <a href="https://cesar.school">Cesar School</a>.</p>
-	<p>For more information on OWASP Juice Shop, visit the <a href="https://owasp.org/www-project-juice-shop/">official OWASP Juice Shop page</a>.</p>
-	<p><strong>Installation</strong></p>
-	<p>To set up OWASP Juice Shop locally, follow the instructions on the <a href="https://github.com/juice-shop/juice-shop">official GitHub repository</a>.</p>
-	<p>For Docker users, simply run:</p>
-	<pre class="hljs"><code><div>docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
-	</div></code></pre>
-	<p><strong>Assessment</strong></p>
-	<p>The assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.</p>
-	<p>Each vulnerability is mapped to its corresponding <a href="https://cwe.mitre.org/">CWE (Common Weakness Enumeration)</a> and evaluated using the <a href="https://www.first.org/cvss/">Common Vulnerability Scoring System (CVSS)</a> calculator.</p>
-	<h2 id="tools">Tools</h2>
-	<ul>
-	<li><a href="https://portswigger.net/burp">Burp Suite Community Edition</a></li>
-	<li><a href="https://sqlmap.org/">Sqlmap</a></li>
-	<li><a href="https://crackstation.net/">CrackStation</a></li>
-	<li><a href="https://getfoxyproxy.org/">FoxyProxy</a></li>
-	<li><a href="https://www.mozilla.org/">Firefox</a></li>
-	<li><a href="https://www.docker.com/">Docker</a></li>
-	<li><a href="https://www.kali.org/">Kali Linux</a></li>
-	<li><a href="https://ubuntu.com/">Ubuntu</a></li>
-	<li><a href="https://learn.microsoft.com/windows/wsl/">Windows Subsystem for Linux</a></li>
-	</ul>
-	<h2 id="1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</h2>
-	<p><img src="img/mapping-burp.png" alt="alt text"></p>
-	<p>Burp Suite -&gt; Target -&gt; Site map</p>
-	<p>By accessing the <code>/ftp</code> directory directly, files available for download can be seen.</p>
-	<p><img src="img/mapping-ftp.png" alt="alt text"></p>
-	<p>For example, the <code>acquisitions.md</code> file contains sensitive information about the company's acquisitions.</p>
-	<p><img src="img/mapping-acquisitions.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/538.html">CWE-538: File and Directory Information Exposure</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 7.5 (High) - Unauthorized access to sensitive company information.</p>
-	<p><img src="img/mapping-ftp-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>: Implement proper access control and disable directory listing.</p>
-	<h2 id="2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</h2>
-	<p>Inspecting <code>main.js</code> in the developer tools debugger with Pretty Print reveals critical internal information.</p>
-	<p><img src="img/mapping-mainjs.png" alt="alt text"></p>
-	<p>For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.</p>
-	<p><img src="img/mapping-admin-panel.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/922.html">CWE-922: Insecure Storage of Sensitive Information</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 5.3 (Medium) - Exposure of internal endpoints and application logic.</p>
-	<p><img src="img/mapping-mainjs-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>: Minimize information exposure in client-side code and use obfuscation where possible.</p>
-	<h2 id="3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</h2>
-	<p>The login form is vulnerable to SQL injection. By entering <code>' OR 1=1 --</code> in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.</p>
-	<p><img src="img/sqlinjection-admin-login.png" alt="alt text"></p>
-	<p>Using Burp Suite Intruder tool configured with a <a href="https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass">list</a> of SQL Injection payloads to automate and test the vulnerability in the login form.</p>
-	<p><img src="img/sqlinjection-admin-bruteforce.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 10 (Critical) - Potential to gain administrative access to the application.</p>
-	<p><img src="img/sqlinjection-admin-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>: Implement parameterized queries and use prepared statements.</p>
-	<h2 id="4---sql-injection-in-product-search">4 - SQL Injection in Product Search</h2>
-	<p>The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and <a href="https://sqlmap.org/">sqlmap</a>, the entire database schema and data were collected. This included registered <a href="db/Cards.csv">credit cards</a> in plain text and all <a href="db/Users.csv">users</a> information, although passwords were encrypted.</p>
-	<p><img src="img/sqlinjection2-endpointburp.png" alt="alt text"></p>
-	<p><img src="img/sqlinjection2-sqlmap.png" alt="alt text"></p>
-	<p><img src="img/sqlinjection2-tables.png" alt="alt text"></p>
-	<p><img src="img/sqlinjection2-cards.png" alt="alt text"></p>
-	<p><img src="img/sqlinjection2-users.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 9.8 (Critical) - Full database access and data exfiltration.</p>
-	<p><img src="img/sqlinjection2-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.</p>
-	<h2 id="5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</h2>
-	<p>By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool <a href="https://crackstation.net/">CrackStation</a>, 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.</p>
-	<p><img src="img/weakcrypto-rainbow.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Reversible One-Way Hash</a></li>
-	</ul>
-	<p><strong>Severity</strong>:  9.1 (Critical) - Unauthorized access to user and admin accounts through password decryption.</p>
-	<p><img src="img/weakcrypto-score.png" alt="CVSS Score"></p>
-	<p><strong>Remediation</strong>: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.</p>
-	<h2 id="6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</h2>
-	<p>The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.</p>
-	<p>The request with the correct current password successfully changes the password:</p>
-	<p><img src="img/csrf-1.png" alt="alt text"></p>
-	<p>The request with an incorrect current password leads to an error:❌</p>
-	<p><img src="img/csrf-2.png" alt="alt text"></p>
-	<p>The request without the current password value successfully changes the password: ✅</p>
-	<p><img src="img/csrf-3.png" alt="alt text"></p>
-	<p>Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.</p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 8.0 (High) - Unauthorized actions performed on behalf of authenticated users.</p>
-	<p><img src="img/csrf-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.</p>
-	<h2 id="7---dom-xss-in-product-search">7 - DOM XSS in Product Search</h2>
-	<p>The product search functionality is vulnerable to DOM-based XSS. DOM-based XSS occurs when the attack payload is executed as part of the Document Object Model (DOM) on the client side, without any interaction with the server.</p>
-	<p>By entering the payload in the browser´s search bar, the application executes the script in the context of the user's browser.</p>
-	<p><strong>Payloads:</strong></p>
-	<ol>
-	<li>
-	<p><strong>Basic Script Alert</strong> ❌</p>
-	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">alert(<span class="hljs-string">'XSS'</span>);</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
-	</div></code></pre>
-	<p>This payload did not work as the script was sanitized.</p>
-	</li>
-	<li>
-	<p><strong>Image Tag with onerror Attribute</strong> ✅</p>
-	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>'<span class="hljs-attr">XSS</span>')&gt;</span>
-	</div></code></pre>
-	<p>This payload triggered an alert box, demonstrating the presence of an XSS vulnerability.</p>
-	<p><img src="img/xss-dom-alert.png" alt="alt text"></p>
-	</li>
-	<li>
-	<p><strong>Simple Redirect Link</strong> ✅</p>
-	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://cesar.school/"</span>&gt;</span>Clique<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
-	</div></code></pre>
-	<p>This payload created a link that, when clicked, redirected the user to another page.</p>
-	<p><img src="img/xss-dom-redirect.png" alt="alt text"></p>
-	</li>
-	<li>
-	<p><strong>Image Tag with onerror Redirect</strong> ✅</p>
-	<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">"window.location='https://cesar.school'"</span>&gt;</span>
-	</div></code></pre>
-	<p>This payload straight redirected the user upon triggering the onerror event.</p>
-	</li>
-	<li>
-	<p><strong>Cookie Stealing</strong> ✅</p>
-	<pre class="hljs"><code><div> <span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"javascript:alert(document.cookie)"</span>&gt;</span>
-	</div></code></pre>
-	<p><img src="img/xss-dom-cookie.png" alt="alt text">
-	This payload triggered an alert showing the user's cookies.</p>
-	</li>
-	</ol>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the user's browser.</p>
-	<p><img src="img/xss-dom-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>:</p>
-	<ol>
-	<li>Implement proper input validation and output encoding.</li>
-	<li>Use security libraries and frameworks that handle these issues automatically.</li>
-	</ol>
-	<h2 id="8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</h2>
-	<p>The basket functionality has broken access control vulnerabilities, allowing unauthorized actions on behalf of other users.</p>
-	<p><strong>View other users baskets</strong></p>
-	<p>By manipulating the request to view a basket, it was possible to access other users baskets. Using Burp Suite's Repeater tool, the HTTP header was modified to <code>/rest/basket/*</code>, with <code>*</code> being the user ID. This allowed viewing the contents of other users' baskets.</p>
-	<ul>
-	<li>
-	<p>Original request:</p>
-	<p><img src="img/broken-request-original.png" alt="alt text"></p>
-	</li>
-	<li>
-	<p>Altered request:</p>
-	<p><img src="img/broken-request-altered.png" alt="alt text"></p>
-	</li>
-	<li>
-	<p>Reponse</p>
-	<p>The response shows the basket of the user with ID 2:</p>
-	<p><img src="img/broken-response.png" alt="alt text"></p>
-	</li>
-	</ul>
-	<p>Jim's basket was accessed, revealing his items and personal information.</p>
-	<p><img src="img/broken-site.png" alt="alt text"></p>
-	<p><strong>Add items to other users baskets</strong></p>
-	<p>It was possible to add items to other users baskets by manipulating the request to add an item. This involved intercepting the request and altering the BasketId parameter.</p>
-	<ul>
-	<li>
-	<p>Original request:</p>
-	<p>User <code>admin</code> -&gt; BasketId <code>1</code></p>
-	<p>Product <code>Eggfruit Juice</code> -&gt; ProductId <code>3</code></p>
-	<p><img src="img/broken-add-request-original.png" alt="alt text"></p>
-	</li>
-	</ul>
-	<p>Trying to simply change the <code>BasketId</code> to <code>2</code> didn´t work, but adding a duplicated <code>BasketId</code> parameter with the value <code>2</code> worked.</p>
-	<ul>
-	<li>
-	<p>Altered request:</p>
-	<p>User <code>Jim</code> -&gt; BasketId <code>2</code>
-	Quantity -&gt; <code>10</code></p>
-	<p><img src="img/broken-add-request-altered.png" alt="alt text"></p>
-	</li>
-	<li>
-	<p>Successful Response:</p>
-	<p><img src="img/broken-add-response.png" alt="alt text"></p>
-	</li>
-	</ul>
-	<p>Attempting to add more items to the basket on basket page using a <code>PUT</code> request or using Burp Suite's Repeater tool was unsuccessful. The vulnerability could only be exploited through the &quot;Add to Basket&quot; functionality on the main page by intercepting and modifying the request.</p>
-	<p><img src="img/broken-add-site.png" alt="alt text"></p>
-	<p><strong>CWE ID</strong>:</p>
-	<ul>
-	<li><a href="https://cwe.mitre.org/data/definitions/284.html">CWE-284: Improper Access Control</a></li>
-	</ul>
-	<p><strong>Severity</strong>: 8.1 (High) - Unauthorized actions performed on behalf of other users, including viewing and modifying basket contents.</p>
-	<p><img src="img/broken-add-score.png" alt="alt text"></p>
-	<p><strong>Remediation</strong>:
-	Implement proper access control checks on both server-side and client-side.
-	Validate user permissions for each action to ensure users can only access and modify their own resources.</p>
-	<h2 id="9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</h2>
-	</div>
+<div class="container">
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</h1>
+<p>&lt;&lt; <strong><a href="https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/a1ca2245606b34b643a66882b92c3b3eb210dd36/report.html">HTML Preview</a></strong> &gt;&gt;</p>
+<h3 id="contents">Contents</h3>
+<ul>
+<li><a href="#web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</a>
+<ul>
+<li><a href="#contents">Contents</a></li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#tools">Tools</a></li>
+<li><a href="#1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</a></li>
+<li><a href="#2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</a></li>
+<li><a href="#3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</a></li>
+<li><a href="#4---sql-injection-in-product-search">4 - SQL Injection in Product Search</a></li>
+<li><a href="#5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</a></li>
+<li><a href="#6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</a></li>
+<li><a href="#7---dom-xss-in-product-search">7 - DOM XSS in Product Search</a></li>
+<li><a href="#8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</a></li>
+<li><a href="#9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</a></li>
+<li><a href="#10---improper-input-validation-in-file-upload-functionality">10 - Improper Input Validation in File Upload Functionality</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the OWASP Top Ten and other security flaws found in real-world applications. This project serves as a learning guide for understanding and mitigating web application security issues.</p>
+<p>This report is part of the <code>Web Application Security</code> course in the <code>Cybersecurity Specialization</code> in <a href="https://cesar.school">Cesar School</a>.</p>
+<p>For more information on OWASP Juice Shop, visit the <a href="https://owasp.org/www-project-juice-shop/">official OWASP Juice Shop page</a>.</p>
+<p><strong>Installation</strong></p>
+<p>To set up OWASP Juice Shop locally, follow the instructions on the <a href="https://github.com/juice-shop/juice-shop">official GitHub repository</a>.</p>
+<p>For Docker users, simply run:</p>
+<pre class="hljs"><code><div>docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
+</div></code></pre>
+<p><strong>Assessment</strong></p>
+<p>This assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.</p>
+<p>Each vulnerability is mapped to its corresponding <a href="https://cwe.mitre.org/">CWE (Common Weakness Enumeration)</a> and evaluated using the <a href="https://www.first.org/cvss/">Common Vulnerability Scoring System (CVSS)</a> calculator.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://portswigger.net/burp">Burp Suite Community Edition</a></li>
+<li><a href="https://sqlmap.org/">Sqlmap</a></li>
+<li><a href="https://crackstation.net/">CrackStation</a></li>
+<li><a href="https://getfoxyproxy.org/">FoxyProxy</a></li>
+<li><a href="https://www.mozilla.org/">Firefox</a></li>
+<li><a href="https://www.docker.com/">Docker</a></li>
+<li><a href="https://www.kali.org/">Kali Linux</a></li>
+<li><a href="https://ubuntu.com/">Ubuntu</a></li>
+<li><a href="https://learn.microsoft.com/windows/wsl/">Windows Subsystem for Linux</a></li>
+</ul>
+<h2 id="1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</h2>
+<p>Burp Suite was used to map the application's endpoints. By navigating through the site map, the <code>/ftp</code> directory was discovered, which allows directory listing. This exposes sensitive information about the application's internal structure and files</p>
+<p><img src="img/mapping-burp.png" alt="alt text"></p>
+<ul>
+<li>
+<p>By accessing the <code>/ftp</code> directory directly, files available for download can be seen.</p>
+<p><img src="img/mapping-ftp.png" alt="alt text"></p>
+</li>
+<li>
+<p>For example, the <code>acquisitions.md</code> file contains sensitive information about the company's acquisitions.</p>
+<p><img src="img/mapping-acquisitions.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/538.html">CWE-538: File and Directory Information Exposure</a></li>
+</ul>
+<p><strong>Severity</strong>: 7.5 (High) - Unauthorized access to sensitive company information.</p>
+<p><img src="img/mapping-ftp-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>: Implement proper access control and disable directory listing.</p>
+<h2 id="2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</h2>
+<p>Inspecting <code>main.js</code> in the developer tools debugger with Pretty Print reveals critical internal information.</p>
+<p><img src="img/mapping-mainjs.png" alt="alt text"></p>
+<ul>
+<li>
+<p>For instance, searching for 'admin' exposes the administration panel, which may displays user information and customer feedback control.</p>
+<p><img src="img/mapping-admin-panel.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/922.html">CWE-922: Insecure Storage of Sensitive Information</a></li>
+</ul>
+<p><strong>Severity</strong>: 5.3 (Medium) - Exposure of internal endpoints and application logic.</p>
+<p><img src="img/mapping-mainjs-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>: Minimize information exposure in client-side code and use obfuscation where possible.</p>
+<h2 id="3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</h2>
+<p>The login form is vulnerable to SQL injection. By entering <code>' OR 1=1 --</code> in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.</p>
+<p><img src="img/sqlinjection-admin-login.png" alt="alt text"></p>
+<ul>
+<li>
+<p>Using Burp Suite Intruder tool configured with a <a href="https://book.hacktricks.xyz/pentesting-web/login-bypass/sql-login-bypass">list</a> of SQL Injection payloads to automate and test the vulnerability in the login form.</p>
+<p><img src="img/sqlinjection-admin-bruteforce.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
+</ul>
+<p><strong>Severity</strong>: 10 (Critical) - Potential to gain administrative access to the application.</p>
+<p><img src="img/sqlinjection-admin-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>: Implement parameterized queries and use prepared statements.</p>
+<h2 id="4---sql-injection-in-product-search">4 - SQL Injection in Product Search</h2>
+<p>The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and <a href="https://sqlmap.org/">sqlmap</a>, the entire database schema and data were collected. This included registered <a href="db/Cards.csv">credit cards</a> in plain text and all <a href="db/Users.csv">users</a> information, although passwords were encrypted.</p>
+<p><img src="img/sqlinjection2-endpointburp.png" alt="alt text"></p>
+<p><img src="img/sqlinjection2-sqlmap.png" alt="alt text"></p>
+<p><img src="img/sqlinjection2-tables.png" alt="alt text"></p>
+<p><img src="img/sqlinjection2-cards.png" alt="alt text"></p>
+<p><img src="img/sqlinjection2-users.png" alt="alt text"></p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a></li>
+</ul>
+<p><strong>Severity</strong>: 9.8 (Critical) - Full database access and data exfiltration.</p>
+<p><img src="img/sqlinjection2-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.</p>
+<h2 id="5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</h2>
+<p>By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool <a href="https://crackstation.net/">CrackStation</a>, 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.</p>
+<p><img src="img/weakcrypto-rainbow.png" alt="alt text"></p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/328.html">CWE-328: Reversible One-Way Hash</a></li>
+</ul>
+<p><strong>Severity</strong>:  9.1 (Critical) - Unauthorized access to user and admin accounts through password decryption.</p>
+<p><img src="img/weakcrypto-score.png" alt="CVSS Score"></p>
+<p><strong>Remediation</strong>: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.</p>
+<h2 id="6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</h2>
+<p>The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.</p>
+<ul>
+<li>
+<p>The request with the correct current password successfully changes the password:</p>
+<p><img src="img/csrf-1.png" alt="alt text"></p>
+</li>
+<li>
+<p>The request with an incorrect current password leads to an error:❌</p>
+<p><img src="img/csrf-2.png" alt="alt text"></p>
+</li>
+<li>
+<p>The request without the current password value successfully changes the password: ✅</p>
+<p><img src="img/csrf-3.png" alt="alt text"></p>
+</li>
+</ul>
+<p>Obs.: The vulnerability did not work on an updated version of Firefox due to built-in browser protections, making it harder to reproduce the attack on a victim's computer. However, other methods, such as using Burp Suite, older browsers, or custom scripts, could still be used to exploit this vulnerability.</p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery (CSRF)</a></li>
+</ul>
+<p><strong>Severity</strong>: 8.0 (High) - Unauthorized actions performed on behalf of authenticated users.</p>
+<p><img src="img/csrf-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.</p>
+<h2 id="7---dom-xss-in-product-search">7 - DOM XSS in Product Search</h2>
+<p>The product search functionality is vulnerable to DOM-based XSS. DOM-based XSS occurs when the attack payload is executed as part of the Document Object Model (DOM) on the client side, without any interaction with the server.</p>
+<p>By entering the payload in the browser´s search bar, the application executes the script in the context of the user's browser.</p>
+<p><strong>Payloads:</strong></p>
+<ol>
+<li>
+<p><strong>Basic Script Alert</strong> ❌</p>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">alert(<span class="hljs-string">'XSS'</span>);</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</div></code></pre>
+<p>This payload did not work as the script was sanitized.</p>
+</li>
+<li>
+<p><strong>Image Tag with onerror Attribute</strong> ✅</p>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">alert(</span>'<span class="hljs-attr">XSS</span>')&gt;</span>
+</div></code></pre>
+<p>This payload triggered an alert box, demonstrating the presence of an XSS vulnerability.</p>
+<p><img src="img/xss-dom-alert.png" alt="alt text"></p>
+</li>
+<li>
+<p><strong>Simple Redirect Link</strong> ✅</p>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"https://cesar.school/"</span>&gt;</span>Clique<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</div></code></pre>
+<p>This payload created a link that, when clicked, redirected the user to another page.</p>
+<p><img src="img/xss-dom-redirect.png" alt="alt text"></p>
+</li>
+<li>
+<p><strong>Image Tag with onerror Redirect</strong> ✅</p>
+<pre class="hljs"><code><div><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">x</span> <span class="hljs-attr">onerror</span>=<span class="hljs-string">"window.location='https://cesar.school'"</span>&gt;</span>
+</div></code></pre>
+<p>This payload straight redirected the user upon triggering the onerror event.</p>
+</li>
+<li>
+<p><strong>Cookie Stealing</strong> ✅</p>
+<pre class="hljs"><code><div> <span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"javascript:alert(document.cookie)"</span>&gt;</span>
+</div></code></pre>
+<p>This payload triggered an alert showing the user's cookies.</p>
+<p><img src="img/xss-dom-cookie.png" alt="alt text"></p>
+</li>
+</ol>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')</a></li>
+</ul>
+<p><strong>Severity</strong>: 5.4 (Medium) - Potential to execute arbitrary JavaScript in the user's browser.</p>
+<p><img src="img/xss-dom-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>:
+Implement proper input validation and output encoding.
+Use security libraries and frameworks that handle these issues automatically.</p>
+<h2 id="8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</h2>
+<p>The basket functionality has broken access control vulnerabilities, allowing unauthorized actions on behalf of other users.</p>
+<p><strong>View other users baskets</strong></p>
+<p>By manipulating the request to view a basket, it was possible to access other users baskets. Using Burp Suite's Repeater tool, the HTTP header was modified to <code>/rest/basket/*</code>, with <code>*</code> being the user ID. This allowed viewing the contents of other users' baskets.</p>
+<ul>
+<li>
+<p>Original request:</p>
+<p><img src="img/broken-request-original.png" alt="alt text"></p>
+</li>
+<li>
+<p>Altered request:</p>
+<p><img src="img/broken-request-altered.png" alt="alt text"></p>
+</li>
+<li>
+<p>Reponse</p>
+<p>The response shows the basket of the user with ID 2:</p>
+<p><img src="img/broken-response.png" alt="alt text"></p>
+</li>
+</ul>
+<p>Jim's basket was accessed, revealing his items and personal information.</p>
+<p><img src="img/broken-site.png" alt="alt text"></p>
+<p><strong>Add items to other users baskets</strong></p>
+<p>It was possible to add items to other users baskets by manipulating the request to add an item. This involved intercepting the request and altering the BasketId parameter.</p>
+<ul>
+<li>
+<p>Original request:</p>
+<p>User <code>admin</code></p>
+<p>BasketId <code>1</code></p>
+<p>Product <code>Eggfruit Juice</code></p>
+<p>ProductId <code>3</code></p>
+<p><img src="img/broken-add-request-original.png" alt="alt text"></p>
+</li>
+</ul>
+<p>Trying to simply change the <code>BasketId</code> to <code>2</code> didn´t work, but adding a duplicated <code>BasketId</code> parameter with the value <code>2</code> worked.</p>
+<ul>
+<li>
+<p>Altered request:</p>
+<p>User <code>Jim</code></p>
+<p>BasketId <code>2</code></p>
+<p>Quantity <code>10</code></p>
+<p><img src="img/broken-add-request-altered.png" alt="alt text"></p>
+</li>
+<li>
+<p>Successful Response:</p>
+<p><img src="img/broken-add-response.png" alt="alt text"></p>
+</li>
+</ul>
+<p>Attempting to add more items to the basket on basket page using a <code>PUT</code> request or using Burp Suite's Repeater tool were unsuccessful. The vulnerability could only be exploited through the &quot;Add to Basket&quot; functionality on the main page by intercepting and modifying the request.</p>
+<p><img src="img/broken-add-site.png" alt="alt text"></p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/284.html">CWE-284: Improper Access Control</a></li>
+</ul>
+<p><strong>Severity</strong>: 8.1 (High) - Unauthorized actions performed on behalf of other users, including viewing and modifying basket contents.</p>
+<p><img src="img/broken-add-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>:
+Implement proper access control checks on both server-side and client-side.
+Validate user permissions for each action to ensure users can only access and modify their own resources.</p>
+<h2 id="9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</h2>
+<p>The basket functionality is vulnerable to improper input validation. By entering a negative quantity in the basket the application allows the user to proceed with the purchase, resulting in a negative total price.</p>
+<ul>
+<li>
+<p>Original request:</p>
+<p><img src="img/input-request-original.png" alt="alt text"></p>
+</li>
+<li>
+<p>Altered request:</p>
+<p>Quantity <code>-10</code></p>
+<p><img src="img/input-request-altered.png" alt="alt text"></p>
+</li>
+<li>
+<p>Successful Response:</p>
+<p><img src="img/input-response.png" alt="alt text"></p>
+</li>
+</ul>
+<p>The application allowed the purchase of a negative quantity of items, resulting in a negative total price.
+<img src="img/input-basket.png" alt="alt text"></p>
+<p>By checking out with a negative quantity using de digital wallet functionality, the user receives money instead of paying for the items.
+<img src="img/input-order.png" alt="alt text"></p>
+<p><img src="img/input-wallet.png" alt="alt text"></p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+</ul>
+<p><strong>Severity</strong>: 6.5 (Medium) - Financial loss due to negative transactions allowed.</p>
+<p><img src="img/input-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>:
+Implement proper input validation to ensure only positive quantities are allowed.
+Perform server-side checks to validate the quantity before processing transactions.</p>
+<h2 id="10---improper-input-validation-in-file-upload-functionality">10 - Improper Input Validation in File Upload Functionality</h2>
+<p>The file upload functionality in the complaint page is vulnerable to improper input validation. The front-end enforces a restriction on file size (maximum 100 KB) and allowed file extensions (<code>.pdf</code> and <code>.zip</code>). However, these restrictions can be bypassed by manipulating the file extension and size through intercepted requests.</p>
+<ul>
+<li>
+<p>The interface does not allow files over 100 KB or with extensions other than <code>.pdf</code> or <code>.zip</code>.</p>
+<p><img src="img/file-upload+100.png" alt="alt text"></p>
+<p><img src="img/file-upload-pdfziponly.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>Changing File Extension:</strong></p>
+<ul>
+<li>
+<p>Upload a bash script <code>payload-script.sh</code> by changing its extension to <code>payload-script.sh.zip</code>.</p>
+<p><img src="img/file-upload-script.png" alt="alt text"></p>
+<p><img src="img/file-upload-script-site.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>Manipulating Request with Burp Suite:</strong></p>
+<ul>
+<li>Intercept the upload request using Burp Suite.</li>
+<li>Modify the file extension back to <code>payload-script.sh</code> and insert additional data to bypass the 100 KB constraint.</li>
+</ul>
+<p>Original Request:</p>
+<p><img src="img/file-upload-request-original.png" alt="alt text"></p>
+<p>Altered Request:</p>
+<p><img src="img/file-upload-request-altered.png" alt="alt text"></p>
+<p>The upload is successfully processed, allowing the malicious file to be uploaded.</p>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+</ul>
+<p><strong>Severity</strong>: 9.8 (High) - Potential for arbitrary file uploads leading to remote code execution or further exploitation.</p>
+<p><img src="img/file-upload-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong>:
+Implement server-side validation to enforce file size and extension restrictions.</p>
+<hr>
+<p><strong>Report by</strong>: Pedro Coelho</p>
+<p><strong>Cesar School</strong><br>
+<strong>Specialization in Cybersecurity</strong><br>
+<strong>Web Application Security Course</strong><br>
+<strong>Instructor</strong>: Petronio Lopes</p>
+
+</div>
 </body>
 </html>
