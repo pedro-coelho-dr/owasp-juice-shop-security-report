@@ -16,7 +16,7 @@
   - [7 - DOM XSS in Product Search](#7---dom-xss-in-product-search)
   - [8 - Broken Access Control in Basket Functionality](#8---broken-access-control-in-basket-functionality)
   - [9 - Improper Input Validation in Basket Functionality](#9---improper-input-validation-in-basket-functionality)
-  - [Last one](#last-one)
+  - [10 - Improper Input Validation in File Upload Functionality](#10---improper-input-validation-in-file-upload-functionality)
 
 
 ## Summary
@@ -356,4 +356,55 @@ By checking out with a negative quantity using de digital wallet functionality, 
 Implement proper input validation to ensure only positive quantities are allowed.
 Perform server-side checks to validate the quantity before processing transactions.
 
-## Last one
+
+## 10 - Improper Input Validation in File Upload Functionality
+
+The file upload functionality in the complaint page is vulnerable to improper input validation. The front-end enforces a restriction on file size (maximum 100 KB) and allowed file extensions (`.pdf` and `.zip`). However, these restrictions can be bypassed by manipulating the file extension and size through intercepted requests.
+
+- The interface does not allow files over 100 KB or with extensions other than `.pdf` or `.zip`.
+
+    ![alt text](img/file-upload+100.png)
+
+    ![alt text](img/file-upload-pdfziponly.png)
+
+
+**Changing File Extension:**
+
+- Upload a bash script `payload-script.sh` by changing its extension to `payload-script.sh.zip`.
+
+    ![alt text](img/file-upload-script.png)
+
+    ![alt text](img/file-upload-script-site.png)
+
+**Manipulating Request with Burp Suite:**
+
+- Intercept the upload request using Burp Suite.
+- Modify the file extension back to `payload-script.sh` and insert additional data to bypass the 100 KB constraint.
+
+  Original Request:
+        
+    ![alt text](img/file-upload-request-original.png)
+        
+  Altered Request:
+        
+    ![alt text](img/file-upload-request-altered.png)
+
+The upload is successfully processed, allowing the malicious file to be uploaded despite the front-end restrictions.
+
+**CWE ID**:
+- [CWE-20: Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)
+
+**Severity**: 9.8 (High) - Potential for arbitrary file uploads leading to remote code execution or further exploitation.
+
+![alt text](img/file-upload-score.png)
+
+**Remediation**:
+Implement server-side validation to enforce file size and extension restrictions.
+
+---
+**Report by**: Pedro Coelho  
+
+**Cesar School**  
+**Specialization in Cybersecurity**  
+**Web Application Security Course**  
+**Instructor**: Petronio Lopes
