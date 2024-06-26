@@ -1,6 +1,6 @@
 # Web Application Security Report: OWASP Juice Shop
 
-<< **[HTML Preview](https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/a1ca2245606b34b643a66882b92c3b3eb210dd36/report.html)** >>
+<< **[HTML Preview](https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/ee1dfdd539d61a1f9ca8ce889aafa070224517e8/report.html)** >>
 
 ### Contents
 - [Web Application Security Report: OWASP Juice Shop](#web-application-security-report-owasp-juice-shop)
