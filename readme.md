@@ -1,7 +1,7 @@
 # Web Application Security Report: OWASP Juice Shop
 
 ### 📄 [Report Markdown](report.md)  
-### 🌐 [Report HTML](report.html)
+### 🌐 [Report HTML](https://htmlpreview.github.io/?https://github.com/pedro-coelho-dr/owasp-juice-shop-security-report/blob/0db84832a965625b36ad0a3d6edace9d3ed79fd6/report.html)
 
 ## Summary
 
