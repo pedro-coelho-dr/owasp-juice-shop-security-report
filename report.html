@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Web Application Security Report: OWASP Juice Shop</title>
+<title>report.md</title>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
@@ -23,7 +23,7 @@ body {
 }
 
 .container {
-	max-width: 800px; /* Adjust the max-width as needed */
+	max-width: 800px;
 	width: 100%;
 }
 
@@ -365,7 +365,7 @@ code {
 <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-<div class="container">
+	<div class="container">
   <script>
     mermaid.initialize({
       startOnLoad: true,
@@ -375,13 +375,22 @@ code {
     });
   </script>
 <h1 id="web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</h1>
-<h3 id="contents">Contents</h3>
+<h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#web-application-security-report-owasp-juice-shop">Web Application Security Report: OWASP Juice Shop</a>
 <ul>
-<li><a href="#contents">Contents</a></li>
-<li><a href="#summary">Summary</a></li>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#executive-summary">Executive Summary</a>
+<ul>
+<li><a href="#approach">Approach</a></li>
+<li><a href="#scope">Scope</a></li>
 <li><a href="#tools">Tools</a></li>
+</ul>
+</li>
+<li><a href="#summary-of-findings">Summary of Findings</a></li>
+<li><a href="#remediation-summary">Remediation Summary</a></li>
+<li><a href="#technical-finding-details">Technical Finding Details</a>
+<ul>
 <li><a href="#1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</a></li>
 <li><a href="#2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</a></li>
 <li><a href="#3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</a></li>
@@ -392,26 +401,33 @@ code {
 <li><a href="#8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</a></li>
 <li><a href="#9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</a></li>
 <li><a href="#10---improper-input-validation-in-file-upload-functionality">10 - Improper Input Validation in File Upload Functionality</a></li>
+<li><a href="#11---insecure-design-and-implementation-of-jwt">11 - Insecure Design and Implementation of JWT</a></li>
+</ul>
+</li>
+<li><a href="#author">Author</a></li>
 </ul>
 </li>
 </ul>
-<h2 id="summary">Summary</h2>
-<p>OWASP Juice Shop is an intentionally insecure web application written in Node.js, Express, and Angular. It includes vulnerabilities from the OWASP Top Ten and other security flaws found in real-world applications. This project serves as a learning guide for understanding and mitigating web application security issues.</p>
-<p>This report is part of the <code>Web Application Security</code> course in the <code>Cybersecurity Specialization</code> in <a href="https://cesar.school">Cesar School</a>.</p>
-<p>For more information on OWASP Juice Shop, visit the <a href="https://owasp.org/www-project-juice-shop/">official OWASP Juice Shop page</a>.</p>
-<p><strong>Installation</strong></p>
-<p>To set up OWASP Juice Shop locally, follow the instructions on the <a href="https://github.com/juice-shop/juice-shop">official GitHub repository</a>.</p>
-<p>For Docker users, simply run:</p>
-<pre class="hljs"><code><div>docker run --rm -p 127.0.0.1:3000:3000 bkimminich/juice-shop
-</div></code></pre>
-<p><strong>Assessment</strong></p>
-<p>This assessment includes identifying vulnerabilities, understanding exploitation techniques, evaluating their severity, and suggesting remediation strategies.</p>
-<p>Each vulnerability is mapped to its corresponding <a href="https://cwe.mitre.org/">CWE (Common Weakness Enumeration)</a> and evaluated using the <a href="https://www.first.org/cvss/">Common Vulnerability Scoring System (CVSS)</a> calculator.</p>
-<h2 id="tools">Tools</h2>
+<h2 id="executive-summary">Executive Summary</h2>
+<h3 id="approach">Approach</h3>
+<p>The approach for this assessment involved systematically identifying vulnerabilities in the OWASP Juice Shop application. The assessment focused on understanding exploitation techniques, evaluating the severity of each vulnerability, and suggesting remediation strategies to mitigate. Each identified vulnerability was mapped to its corresponding <a href="https://cwe.mitre.org/">CWE (Common Weakness Enumeration)</a> and evaluated using the <a href="https://www.first.org/cvss/">Common Vulnerability Scoring System (CVSS)</a> calculator to provide a standardized severity rating.</p>
+<h3 id="scope">Scope</h3>
+<p>The scope of this security assessment covered the OWASP Juice Shop application, which is an intentionally insecure web application used for educational purposes.The following components were included in the assessment:</p>
+<ul>
+<li>Application endpoints</li>
+<li>User authentication mechanisms</li>
+<li>Data storage practices</li>
+<li>Input validation processes</li>
+<li>Access control measures</li>
+</ul>
+<h3 id="tools">Tools</h3>
 <ul>
 <li><a href="https://portswigger.net/burp">Burp Suite Community Edition</a></li>
+<li><a href="https://portswigger.net/bappstore/26aaa5ded2f74beea19e2ed8345a93dd">JWT Editor Burp Extension</a></li>
 <li><a href="https://sqlmap.org/">Sqlmap</a></li>
 <li><a href="https://crackstation.net/">CrackStation</a></li>
+<li><a href="https://hashcat.net/">Hashcat</a></li>
+<li><a href="https://jwt.io/">JWT.io</a></li>
 <li><a href="https://getfoxyproxy.org/">FoxyProxy</a></li>
 <li><a href="https://www.mozilla.org/">Firefox</a></li>
 <li><a href="https://www.docker.com/">Docker</a></li>
@@ -419,7 +435,121 @@ code {
 <li><a href="https://ubuntu.com/">Ubuntu</a></li>
 <li><a href="https://learn.microsoft.com/windows/wsl/">Windows Subsystem for Linux</a></li>
 </ul>
-<h2 id="1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</h2>
+<h2 id="summary-of-findings">Summary of Findings</h2>
+<table>
+<thead>
+<tr>
+<th>Finding #</th>
+<th>Severity Level</th>
+<th>Finding Name</th>
+<th>Severity Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>High</td>
+<td>Directory Listing Exposure in '/ftp'</td>
+<td>7.5</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Medium</td>
+<td>Sensitive Data Exposure in Main.js</td>
+<td>5.3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Critical</td>
+<td>SQL Injection Brute Force in User Login</td>
+<td>10</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Critical</td>
+<td>SQL Injection in Product Search</td>
+<td>9.8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Critical</td>
+<td>Weak Password Hashing (MD5)</td>
+<td>9.1</td>
+</tr>
+<tr>
+<td>6</td>
+<td>High</td>
+<td>Cross-Site Request Forgery (CSRF) in Change Password</td>
+<td>8.0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Medium</td>
+<td>DOM XSS in Product Search</td>
+<td>5.4</td>
+</tr>
+<tr>
+<td>8</td>
+<td>High</td>
+<td>Broken Access Control in Basket Functionality</td>
+<td>8.1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Medium</td>
+<td>Improper Input Validation in Basket Functionality</td>
+<td>6.5</td>
+</tr>
+<tr>
+<td>10</td>
+<td>High</td>
+<td>Improper Input Validation in File Upload Functionality</td>
+<td>9.8</td>
+</tr>
+<tr>
+<td>11</td>
+<td>High</td>
+<td>Insecure Design and Implementation of JWT</td>
+<td>7.1</td>
+</tr>
+</tbody>
+</table>
+<h2 id="remediation-summary">Remediation Summary</h2>
+<p>As a result of this assessment, there are several opportunities to strengthen the security of the OWASP Juice Shop application. Remediation efforts are prioritized below, starting with those that will likely take the least amount of time and effort to complete. It is essential to ensure that all remediation steps and mitigating controls are carefully planned and tested to prevent any service disruptions or loss of data.</p>
+<p><strong>General Recommendations</strong></p>
+<ul>
+<li>Implement Proper Access Control: Ensure that all directories and files are properly secured and access is restricted to authorized users only.</li>
+<li>Use Secure Password Hashing Algorithms: Replace MD5 with a more secure hashing algorithm and implement salting and peppering techniques.</li>
+<li>Enforce Strong Input Validation: Validate and sanitize all user inputs to prevent SQL injection and XSS attacks.</li>
+<li>Implement Anti-CSRF Tokens: Ensure that all state-changing requests require a unique token that is verified on the server-side.</li>
+<li>Use Strong JWT Algorithms: Use stronger algorithms such as HS512 for token signing and ensure tokens have a short expiration time.</li>
+</ul>
+<p><strong>Short Term</strong></p>
+<ul>
+<li><a href="#1---directory-listing-exposure-in-ftp">Finding 1</a>: Disable Directory Listing on the affected web server.</li>
+<li><a href="#2---sensitive-data-exposure-in-mainjs">Finding 2</a>: Minimize information exposure in client-side code and use obfuscation where possible.</li>
+<li><a href="#5---weak-password-hashing-md5">Finding 5</a>: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.</li>
+<li><a href="#6---cross-site-request-forgery-csrf-in-change-password-functionality">Finding 6</a>: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.</li>
+<li><a href="#10---improper-input-validation-in-file-upload-functionality">Finding 10</a>: Implement server-side validation to enforce file size and extension restrictions.</li>
+<li>Enforce a password change for all users because of the compromise.</li>
+</ul>
+<p><strong>Medium Term</strong></p>
+<ul>
+<li><a href="#3---sql-injection-brute-force-in-user-login">Finding 3</a>: Implement parameterized queries and use prepared statements.</li>
+<li><a href="#4---sql-injection-in-product-search">Finding 4</a>: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.</li>
+<li><a href="#7---dom-xss-in-product-search">Finding 7</a>: Implement proper input validation and output encoding. Use security libraries and frameworks that handle these issues automatically.</li>
+<li><a href="#8---broken-access-control-in-basket-functionality">Finding 8</a>: Implement proper access control checks on both server-side and client-side. Validate user permissions for each action to ensure users can only access and modify their own resources.</li>
+<li><a href="#9---improper-input-validation-in-basket-functionality">Finding 9</a>: Implement proper input validation to ensure only positive quantities are allowed. Perform server-side checks to validate the quantity before processing transactions.</li>
+<li><a href="#11---insecure-design-and-implementation-of-jwt">Finding 11</a>: Avoid storing sensitive information directly in the JWT payload. Use stronger algorithms such as HS512 for token signing and ensure tokens have a short expiration time.</li>
+</ul>
+<p><strong>Long Term</strong></p>
+<ul>
+<li>Perform ongoing internal web vulnerability assessments and password audits.</li>
+<li>Perform periodic security assessments.</li>
+<li>Educate systems and network administrators and developers on security hardening best practices.</li>
+</ul>
+<h2 id="technical-finding-details">Technical Finding Details</h2>
+<h3 id="1---directory-listing-exposure-in-ftp">1 - Directory Listing Exposure in '/ftp'</h3>
 <p>Burp Suite was used to map the application's endpoints. By navigating through the site map, the <code>/ftp</code> directory was discovered, which allows directory listing. This exposes sensitive information about the application's internal structure and files</p>
 <p><img src="img/mapping-burp.png" alt="alt text"></p>
 <ul>
@@ -439,7 +569,7 @@ code {
 <p><strong>Severity</strong>: 7.5 (High) - Unauthorized access to sensitive company information.</p>
 <p><img src="img/mapping-ftp-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>: Implement proper access control and disable directory listing.</p>
-<h2 id="2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</h2>
+<h3 id="2---sensitive-data-exposure-in-mainjs">2 - Sensitive Data Exposure in Main.js</h3>
 <p>Inspecting <code>main.js</code> in the developer tools debugger with Pretty Print reveals critical internal information.</p>
 <p><img src="img/mapping-mainjs.png" alt="alt text"></p>
 <ul>
@@ -455,7 +585,7 @@ code {
 <p><strong>Severity</strong>: 5.3 (Medium) - Exposure of internal endpoints and application logic.</p>
 <p><img src="img/mapping-mainjs-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>: Minimize information exposure in client-side code and use obfuscation where possible.</p>
-<h2 id="3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</h2>
+<h3 id="3---sql-injection-brute-force-in-user-login">3 - SQL Injection Brute Force in User Login</h3>
 <p>The login form is vulnerable to SQL injection. By entering <code>' OR 1=1 --</code> in the Email field and anything in the password field, the application logs in as the first user in the database (the admin user). By exploiting this vulnerability, the attacker can escalate privileges, gaining administrative access to the application and enabling multiple further attacks.</p>
 <p><img src="img/sqlinjection-admin-login.png" alt="alt text"></p>
 <ul>
@@ -471,7 +601,7 @@ code {
 <p><strong>Severity</strong>: 10 (Critical) - Potential to gain administrative access to the application.</p>
 <p><img src="img/sqlinjection-admin-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>: Implement parameterized queries and use prepared statements.</p>
-<h2 id="4---sql-injection-in-product-search">4 - SQL Injection in Product Search</h2>
+<h3 id="4---sql-injection-in-product-search">4 - SQL Injection in Product Search</h3>
 <p>The search field in the application is vulnerable to SQL injection. By using tools like Burp Suite and <a href="https://sqlmap.org/">sqlmap</a>, the entire database schema and data were collected. This included registered <a href="db/Cards.csv">credit cards</a> in plain text and all <a href="db/Users.csv">users</a> information, although passwords were encrypted.</p>
 <p><img src="img/sqlinjection2-endpointburp.png" alt="alt text"></p>
 <p><img src="img/sqlinjection2-sqlmap.png" alt="alt text"></p>
@@ -485,7 +615,7 @@ code {
 <p><strong>Severity</strong>: 9.8 (Critical) - Full database access and data exfiltration.</p>
 <p><img src="img/sqlinjection2-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>: Use parameterized queries, validate and sanitize inputs, and implement robust access controls.</p>
-<h2 id="5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</h2>
+<h3 id="5---weak-password-hashing-md5">5 - Weak Password Hashing (MD5)</h3>
 <p>By examining the user table, it was detected that the password hashes are stored using the MD5 hashing algorithm. Using a rainbow table attack via the online tool <a href="https://crackstation.net/">CrackStation</a>, 4 passwords were successfully decrypted. Further research and use of more comprehensive rainbow tables could potentially lead to the decryption of more passwords.</p>
 <p><img src="img/weakcrypto-rainbow.png" alt="alt text"></p>
 <p><strong>CWE ID</strong>:</p>
@@ -495,7 +625,7 @@ code {
 <p><strong>Severity</strong>:  9.1 (Critical) - Unauthorized access to user and admin accounts through password decryption.</p>
 <p><img src="img/weakcrypto-score.png" alt="CVSS Score"></p>
 <p><strong>Remediation</strong>: Replace MD5 with a more secure hashing algorithm. Additionally, implement salting and peppering techniques to enhance password security.</p>
-<h2 id="6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</h2>
+<h3 id="6---cross-site-request-forgery-csrf-in-change-password-functionality">6 - Cross-Site Request Forgery (CSRF) in Change Password Functionality</h3>
 <p>The change password functionality is vulnerable to CSRF attacks. Using Burp Suite's Repeater tool, the password could be changed directly by altering the request. When the current password value was set incorrectly, it led to an error. However, by removing the current password value, the password change was successfully executed, allowing the attacker to change the password without knowing the actual current password.</p>
 <ul>
 <li>
@@ -519,7 +649,7 @@ code {
 <p><strong>Severity</strong>: 8.0 (High) - Unauthorized actions performed on behalf of authenticated users.</p>
 <p><img src="img/csrf-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>: Implement anti-CSRF tokens to validate the authenticity of requests. Ensure that all state-changing requests require a unique token that is verified on the server-side.</p>
-<h2 id="7---dom-xss-in-product-search">7 - DOM XSS in Product Search</h2>
+<h3 id="7---dom-xss-in-product-search">7 - DOM XSS in Product Search</h3>
 <p>The product search functionality is vulnerable to DOM-based XSS. DOM-based XSS occurs when the attack payload is executed as part of the Document Object Model (DOM) on the client side, without any interaction with the server.</p>
 <p>By entering the payload in the browser´s search bar, the application executes the script in the context of the user's browser.</p>
 <p><strong>Payloads:</strong></p>
@@ -567,7 +697,7 @@ code {
 <p><strong>Remediation</strong>:
 Implement proper input validation and output encoding.
 Use security libraries and frameworks that handle these issues automatically.</p>
-<h2 id="8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</h2>
+<h3 id="8---broken-access-control-in-basket-functionality">8 - Broken Access Control in Basket Functionality</h3>
 <p>The basket functionality has broken access control vulnerabilities, allowing unauthorized actions on behalf of other users.</p>
 <p><strong>View other users baskets</strong></p>
 <p>By manipulating the request to view a basket, it was possible to access other users baskets. Using Burp Suite's Repeater tool, the HTTP header was modified to <code>/rest/basket/*</code>, with <code>*</code> being the user ID. This allowed viewing the contents of other users' baskets.</p>
@@ -625,7 +755,7 @@ Use security libraries and frameworks that handle these issues automatically.</p
 <p><strong>Remediation</strong>:
 Implement proper access control checks on both server-side and client-side.
 Validate user permissions for each action to ensure users can only access and modify their own resources.</p>
-<h2 id="9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</h2>
+<h3 id="9---improper-input-validation-in-basket-functionality">9 - Improper Input Validation in Basket Functionality</h3>
 <p>The basket functionality is vulnerable to improper input validation. By entering a negative quantity in the basket the application allows the user to proceed with the purchase, resulting in a negative total price.</p>
 <ul>
 <li>
@@ -656,7 +786,7 @@ Validate user permissions for each action to ensure users can only access and mo
 <p><strong>Remediation</strong>:
 Implement proper input validation to ensure only positive quantities are allowed.
 Perform server-side checks to validate the quantity before processing transactions.</p>
-<h2 id="10---improper-input-validation-in-file-upload-functionality">10 - Improper Input Validation in File Upload Functionality</h2>
+<h3 id="10---improper-input-validation-in-file-upload-functionality">10 - Improper Input Validation in File Upload Functionality</h3>
 <p>The file upload functionality in the complaint page is vulnerable to improper input validation. The front-end enforces a restriction on file size (maximum 100 KB) and allowed file extensions (<code>.pdf</code> and <code>.zip</code>). However, these restrictions can be bypassed by manipulating the file extension and size through intercepted requests.</p>
 <ul>
 <li>
@@ -691,13 +821,48 @@ Perform server-side checks to validate the quantity before processing transactio
 <p><img src="img/file-upload-score.png" alt="alt text"></p>
 <p><strong>Remediation</strong>:
 Implement server-side validation to enforce file size and extension restrictions.</p>
-<hr>
-<p><strong>Report by</strong>: Pedro Coelho</p>
-<p><strong>Cesar School</strong><br>
+<h3 id="11---insecure-design-and-implementation-of-jwt">11 - Insecure Design and Implementation of JWT</h3>
+<p>The JSON Web Token (JWT) implementation in OWASP Juice Shop exhibits multiple security issues, including poor handling of tokens and potential exposure of sensitive information.</p>
+<ul>
+<li>
+<p>Intercepting the request to the <code>user login</code> endpoint reveals the JWT token in the response.</p>
+<p><img src="/img/jwt-setcookie.png" alt="alt text"></p>
+<p><img src="img/jwt-token.png" alt="alt text"></p>
+</li>
+<li>
+<p>Decoding the JWT token using <a href="https://jwt.io/">jwt.io</a> reveals the user's email address, role, and other sensitive information.</p>
+<p><img src="img/jwt-decoded-header.png" alt="alt text"><br>
+<img src="img/jwt-decoded-body.png" alt="alt text"><br>
+<img src="img/jwt-decoded-footer.png" alt="alt text"></p>
+</li>
+<li>
+<p>By removing the <code>&quot;alg&quot;</code> parameter on the header and the Signature with <a href="https://portswigger.net/bappstore/26aaa5ded2f74beea19e2ed8345a93dd">JWT Editor Burp Extension</a> and changing the <code>&quot;id&quot;</code> parameter to <code>2</code>, the token was successfully modified to impersonate another user.</p>
+<p><img src="img/jwt-request.png" alt="alt text"></p>
+</li>
+<li>
+<p>Original Response:</p>
+<p><img src="img/jwt-original-response.png" alt="alt text"></p>
+</li>
+<li>
+<p>Modified Response:<br>
+<img src="img/jwt-altered-response.png" alt="alt text"></p>
+</li>
+</ul>
+<p><strong>CWE ID</strong>:</p>
+<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/315.html">CWE-315: Cleartext Storage of Sensitive Information in a Cookie</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/346.html">CWE-346: Origin Validation Error</a></li>
+</ul>
+<p><strong>Severity</strong>: 7.1 (High) - Sensitive information exposure and potential for token manipulation.
+<img src="img/jwt-score.png" alt="alt text"></p>
+<p><strong>Remediation</strong></p>
+<p>Avoid storing sensitive information directly in the JWT payload. Use stronger algorithms such as HS512 for token signing and ensure tokens have a short expiration time.</p>
+<h2 id="author">Author</h2>
+<p><strong>Report by</strong>: Pedro Coelho<br>
+<strong>Cesar School</strong><br>
 <strong>Specialization in Cybersecurity</strong><br>
 <strong>Web Application Security Course</strong><br>
 <strong>Instructor</strong>: Petronio Lopes</p>
-
 </div>
 </body>
 </html>
